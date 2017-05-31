@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
+             x:Class="NXT.Views.AddUserToGroupCard">
+    <ContentView.Content>
+        <StackLayout>
+            <control:CardView>
+                <StackLayout Spacing="10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="25"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Image Source="ic_label_outline_white_18dp"  HorizontalOptions="End" Grid.Column="0" Grid.Row="0" />
+                        <Image Source="ic_email_outline_white_18dp" HorizontalOptions="End" Grid.Column="0" Grid.Row="1" />
+
+                        <!--<Label Text="Add a friends email and we'll send them an invite" />-->
+                        <Entry Placeholder="Name" Text="{Binding UserName}" Grid.Column="1" Grid.Row="0"/>
+                        <Entry Placeholder="Email" Text="{Binding Email}" Grid.Column="1" Grid.Row="1"/>
+
+                        <control:CustomImageButton  Grid.Column="2" Grid.Row="0" 
+                        RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width,Factor=1,Constant=9}"
+                        RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height,Factor=0,Constant=-500}"
+                        Image="ic_close_circle_white_18dp" x:Name="Remove" BackgroundColor="Transparent" BorderColor="Transparent" BorderWidth="0"/>
+                    </Grid>
+                </StackLayout>
+
+            </control:CardView>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

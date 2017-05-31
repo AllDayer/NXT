@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="{Binding Title}"
+    xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
+    xmlns:ptr="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
+    x:Class="NXT.Views.SummaryPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Logout" Command="{Binding LogoutCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ptr:PullToRefreshLayout
+          IsPullToRefreshEnabled="True"
+          RefreshCommand="{Binding RefreshCommand}"
+          IsRefreshing="{Binding IsBusy}"
+          RefreshColor="Blue">
+        <ScrollView BackgroundColor="#303030" Padding="10">
+            <StackLayout x:Name="Anchor" >
+
+                <Label Text="It looks like you're not in any groups. Add a group to start tracking!" IsVisible="{Binding NoGroups}" Margin="20"/>
+
+                <control:GroupRepeaterView x:Name="repeater" ItemsSource="{Binding Groups}" ParentVM="{Binding .}" />
+
+                <Button x:Name="btn" Command="{Binding NewGroupCommand}"  Image="ic_account_plus_white_48dp" />
+            </StackLayout>
+        </ScrollView>
+    </ptr:PullToRefreshLayout>
+</ContentPage>

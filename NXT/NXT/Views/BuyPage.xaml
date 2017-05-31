@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="{Binding Title}"
+             x:Class="NXT.Views.BuyPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="History" Command="{Binding HistoryCommand}" />
+        <ToolbarItem Text="Edit" Command="{Binding EditGroupCommand}" />
+    </ContentPage.ToolbarItems>
+    <StackLayout Margin="20" Spacing="15">
+        <Label Text="{Binding ShoutTitle}" HorizontalOptions="Start" FontSize="Large" />
+        <StackLayout>
+            <Label Text="Who did it?" />
+            <Picker ItemsSource="{Binding UsersForRecord}" ItemDisplayBinding="{Binding UserName}" SelectedIndex="{Binding SelectedIndex}"/>
+        </StackLayout>
+        <StackLayout IsVisible="{Binding TrackCost}">
+            <Label Text="Cost"/>
+            <Entry Placeholder="Cost" Keyboard="Numeric" Text="{Binding Cost}"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">
+            <Button Text="Cancel" Command="{Binding CancelCommand}" BackgroundColor="#03A9F4" />
+            <Button Text="Record it!" Command="{Binding BuyCommand}" BackgroundColor="#03A9F4"/>
+        </StackLayout>
+    </StackLayout>
+
+</ContentPage>

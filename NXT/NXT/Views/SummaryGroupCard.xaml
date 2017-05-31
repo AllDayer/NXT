@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
+             xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
+             xmlns:circle="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             x:Class="NXT.Views.SummaryGroupCard"
+             HorizontalOptions="CenterAndExpand">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <helper:IconIndexConverter x:Key="IconIndexConverter"/>
+            <helper:AvatarConverter x:Key="AvatarConverter"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <ContentView.Content>
+
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <control:CardView x:Name="card" Grid.Column="0" >
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25*"/>
+                        <ColumnDefinition Width="50*"/>
+
+                        <ColumnDefinition Width="25*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--<StackLayout WidthRequest="36" HeightRequest="36" Grid.Column="0" Grid.Row="0" HorizontalOptions="Start" VerticalOptions="Center">
+                        <Image Source="ic_account_circle_white_36dp" Aspect="AspectFit" HorizontalOptions="Center"  VerticalOptions="Center" />
+                    </StackLayout>-->
+
+                    <!--<Frame CornerRadius="5" OutlineColor="White" BackgroundColor="Transparent" Padding="5" HasShadow="False">
+                        <Image x:Name="WebImage" Aspect="AspectFit" Grid.Column="0" Grid.Row="0" HorizontalOptions="Center"  VerticalOptions="Center" />
+                    </Frame>-->
+                    <circle:CircleImage x:Name="circle2" 
+                                        Aspect="AspectFit" 
+                                        FillColor="Black" 
+                                        BorderColor="White" 
+                                        BorderThickness="2" 
+                                        HeightRequest="50" 
+                                        WidthRequest="50"
+                                        HorizontalOptions="Start"
+                                        Source="{Binding WhoseShout.AvatarUrl, Converter={StaticResource AvatarConverter}}"
+                                        />
+
+                    <StackLayout Grid.Column="1">
+                        <Label Text="{Binding WhoseShoutDisplay}" TextColor="White"  FontSize="Large" />
+                        <Label Text="{Binding Name}" TextColor="White"  LineBreakMode="WordWrap" />
+
+                    </StackLayout>
+                    <!--<StackLayout Spacing="10" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" BackgroundColor="{Binding BGColour}" >-->
+
+                    <!--<Label Text="{Binding ShoutName}" TextColor="White" HorizontalOptions="CenterAndExpand" Grid.Column="1" />-->
+
+
+                    <Image x:Name="categoryImage" Source="{Binding GroupIconIndex, Converter={StaticResource IconIndexConverter}}" HorizontalOptions="End" Grid.Column="2" />
+                    <!--<circle:CircleImage x:Name="circle" Source="ic_plus_white_18dp.png" Aspect="AspectFit" FillColor="#FF5722" HeightRequest="50" WidthRequest="50" HorizontalOptions="End"/>-->
+                    <!--</StackLayout>-->
+                </Grid>
+            </control:CardView>
+
+        </Grid>
+    </ContentView.Content>
+</ContentView>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="{Binding Title}"
+    xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
+    x:Class="NXT.Views.LoginPage">
+    <!--<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <ResourceDictionary>
+                <Style TargetType="Entry">
+                    <Setter Property="Margin" Value="40,10" />
+                </Style>
+            </ResourceDictionary>
+        </Grid.Resources>-->
+
+    <AbsoluteLayout>
+        <StackLayout Spacing="30" 
+                     AbsoluteLayout.LayoutBounds=".5,.25" AbsoluteLayout.LayoutFlags="PositionProportional">
+            <Label Text="NXT" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
+            <Label Text="Continue with:" FontSize="Small" HorizontalOptions="CenterAndExpand"/>
+            <control:CustomImageButton Image="facebooklogin"  x:Name="OAuth" Command="{Binding OAuthCommand}" BackgroundColor="Transparent"/>
+            <ActivityIndicator Color="Red" IsRunning="true" IsVisible="{Binding IsLoggingIn}"/>
+        </StackLayout>
+    </AbsoluteLayout>
+    <!--</Grid>-->
+</ContentPage>

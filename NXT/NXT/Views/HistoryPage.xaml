@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             Title="{Binding Title}"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:circle="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             xmlns:helper= "clr-namespace:NXT.Helpers;assembly=NXT"
+             x:Class="NXT.Views.HistoryPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helper:DateTimeToStringConverter x:Key="dateTime"/>
+            <helper:AvatarConverter x:Key="AvatarConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout>
+        <ListView ItemsSource="{Binding Group.Records}" RowHeight="75">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid HorizontalOptions="StartAndExpand" Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <circle:CircleImage 
+                                x:Name="circle2" 
+                                Grid.Column="0" 
+                                Grid.Row="0" 
+                                Grid.RowSpan="2" 
+                                Aspect="AspectFit" 
+                                FillColor="Black" 
+                                BorderColor="White"
+                                BorderThickness="2"
+                                HeightRequest="50" 
+                                WidthRequest="50" 
+                                HorizontalOptions="Start"
+                                Source="{Binding UserAvatarUrl, Converter={StaticResource AvatarConverter}}"/>
+
+                            <Label Text="{Binding UserName}" FontSize="Large" Grid.Column="1" Grid.Row="0"/>
+                            <Label Text="{Binding PurchaseTimeUtc, Converter={StaticResource dateTime}}" FontSize="Micro" Grid.Column="1" Grid.Row="1"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
+             xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
+             x:Class="NXT.Views.GroupPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helper:IconIndexConverter x:Key="IconIndexConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ScrollView>
+        <control:CardView>
+            <StackLayout Margin="5">
+                <Entry Placeholder="Group name" Text="{Binding GroupName}"/>
+
+                <control:UserRepeaterView x:Name="repeater" ItemsSource="{Binding UsersInGroup}"  />
+
+                <control:CustomImageButton Image="ic_account_plus_white_48dp.png" BackgroundColor="Transparent" BorderColor="Transparent" Command="{Binding AddUserToGroupCommand}"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="1"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Text="Track Cost?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="1"/>
+                    <Switch x:Name="toggle" IsToggled="{Binding TrackCost}" Grid.Row="1" Grid.Column="2" 
+                        HorizontalOptions="Center"/>
+
+                    <Label Text="Favourite Colour?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="2" Grid.Column="1"/>
+                    <Button Text="" 
+                        Command="{Binding ClickColour}" 
+                        BackgroundColor="{Binding SelectedColour}"
+                        HeightRequest="50"  
+                        WidthRequest="50" 
+                        HorizontalOptions="Center"
+                        Grid.Row="2" Grid.Column="2"/>
+
+                    <Label Text="Icon?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="3" Grid.Column="1"/>
+                    <control:CustomImageButton Text="" 
+                                                Image="{Binding SelectedIconIndex, Converter={StaticResource IconIndexConverter}}"
+                                                Command="{Binding ClickIcon}" 
+                                                BackgroundColor="Transparent"
+                                                HeightRequest="50"  
+                                                WidthRequest="50" 
+                                                HorizontalOptions="Center"
+                                                Grid.Row="3" Grid.Column="2"/>
+
+                </Grid>
+
+
+                <StackLayout>
+                    <control:GridListView 
+                        x:Name="GridIcons"
+                        HorizontalOptions="FillAndExpand"
+                        Grid.Row="1"
+                        VerticalOptions="FillAndExpand"
+                        RowSpacing="20"
+                        ColumnSpacing="20"
+                        MaxColumns="5"
+                        IsClippedToBounds="False"
+                        Command="{Binding ClickIconCommand}"
+                        CommandParameter="{Binding .}"
+                        ItemsSource="{Binding Icons}"
+                        />
+
+
+                </StackLayout>
+                <control:GridListView 
+                        x:Name="GridColours"
+                        HorizontalOptions="FillAndExpand"
+                        Grid.Row="1"
+                        VerticalOptions="FillAndExpand"
+                        RowSpacing="20"
+                        ColumnSpacing="20"
+                        MaxColumns="5"
+                        IsClippedToBounds="False"
+                        Command="{Binding ClickColourCommand}"
+                        CommandParameter="{Binding .}"
+                        ItemsSource="{Binding Colours}"
+                        />
+
+                <!--<Picker ItemsSource="{Binding MyCountries}" SelectedIndex="{Binding SelectedIndex}"/>-->
+                <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">
+                    <Button Text="Cancel" Command="{Binding CancelCommand}" BackgroundColor="#03A9F4" />
+                    <Button Text="Save" Command="{Binding CreateGroupCommand}" BackgroundColor="#03A9F4"/>
+                </StackLayout>
+
+            </StackLayout>
+        </control:CardView>
+    </ScrollView>
+</ContentPage>
