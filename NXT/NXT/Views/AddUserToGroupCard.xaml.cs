@@ -7,6 +7,7 @@ using NXT.Services;
 using NXT.ViewModels;
 using NXTWebService.Models;
 using Xamarin.Forms;
+using NXT.Helpers;
 
 namespace NXT.Views
 {
@@ -16,17 +17,25 @@ namespace NXT.Views
         public GroupPageViewModel ShoutGroupVM { get; set; }
         public String BGColor { get; set; }
         public int Index { get; set; }
-        //
-
 
         public AddUserToGroupCard()
         {
             InitializeComponent();
+            name.TextChanged += TextChanged;
+            email.TextChanged += TextChanged;
+            
         }
+
+        private void TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ShoutGroupVM.CheckSubmit();
+        }
+
         protected override void OnBindingContextChanged()
         {
             base.OnBindingContextChanged();
             this.Remove.Clicked += Remove_Clicked;
+            this.Remove.SetBinding(IsVisibleProperty, new Binding("IsEdit", BindingMode.Default, new InveseBooleanConverter(), null, null, ShoutGroupVM));
         }
 
         private void Remove_Clicked(object sender, EventArgs e)

@@ -23,6 +23,8 @@ namespace NXT.ViewModels
         public DelegateCommand NewGroupCommand { get; }
         public DelegateCommand BuyCommand { get; }
         public DelegateCommand RefreshCommand { get; }
+        public DelegateCommand ProfileCommand { get; }
+        private UserDto User { get; set; } = null;
 
         private bool m_NoGroups;
         public bool NoGroups
@@ -45,7 +47,6 @@ namespace NXT.ViewModels
             }
         }
 
-
         public List<RecordDto> ShoutsForGroup { get; set; }
 
         public SummaryPageViewModel(INavigationService navigationService, IAuthenticationService authenticationService, IEventAggregator eventAggregator)
@@ -57,6 +58,7 @@ namespace NXT.ViewModels
             LogoutCommand = new DelegateCommand(OnLogoutCommandExecuted);
             NewGroupCommand = new DelegateCommand(OnNewGroupCommandExecuted);
             RefreshCommand = new DelegateCommand(OnRefreshCommand);
+            ProfileCommand = new DelegateCommand(OnProfileCommand);
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
@@ -73,6 +75,18 @@ namespace NXT.ViewModels
             {
                 OnRefreshCommand();
             }
+            else
+            {
+                if (!String.IsNullOrEmpty(Settings.Current.SocialUserID))
+                {
+                    GetUser();
+                }
+            }
+        }
+        
+        private async void GetUser()
+        {
+            User = await CurrentApp.MainViewModel.ServiceApi.GetUserBySocial(Settings.Current.SocialUserID);
         }
 
         //private String TristanUserString = "d9c91004-3994-4bb4-a703-267904985126";
@@ -115,6 +129,16 @@ namespace NXT.ViewModels
             await RefreshGroups();
             await LoadData();
             IsBusy = false;
+        }
+
+        public async void OnProfileCommand()
+        {
+            if (User != null)
+            {
+                NavigationParameters nav = new NavigationParameters();
+                nav.Add("model", this.User);
+                await _navigationService.NavigateAsync("ProfilePage", nav);
+            }
         }
 
         public void OnLogoutCommandExecuted() => _authenticationService.Logout();

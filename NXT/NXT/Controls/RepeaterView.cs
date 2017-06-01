@@ -44,9 +44,9 @@ namespace NXT.Controls
         {
             var colour = bgColour;
 
-            if (CurrentApp.MainViewModel.GroupColourDictionary.ContainsKey(((GroupDto)vm).ID))
+            if (vm is GroupDto && !String.IsNullOrEmpty(((GroupDto)vm).WhoseShout.Colour) )
             {
-                colour = CurrentApp.MainViewModel.GroupColourDictionary[((GroupDto)vm).ID];
+                colour = ((GroupDto)vm).WhoseShout.Colour;
             }
             return new SummaryGroupCard() { SummaryVM = (SummaryPageViewModel)parentVM, BGColour = colour, BindingContext = vm };
         }
@@ -91,7 +91,7 @@ namespace NXT.Controls
             if (e.NewItems != null)
             {
                 var control = this as RepeaterView<T>;
-                int i = 0;
+                int i = ItemsSource.Count > 0 ? ItemsSource.Count - 1 : 0;
                 foreach (T item in e.NewItems)
                 {
                     var view = control.ViewFor(item, control.ParentVM, CurrentApp.MainViewModel.RandomColour(), i);

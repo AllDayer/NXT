@@ -23,42 +23,64 @@ namespace NXT.ViewModels
         public DelegateCommand CreateGroupCommand { get; }
         public DelegateCommand AddUserToGroupCommand { get; }
         public DelegateCommand CancelCommand { get; }
-        public DelegateCommand ClickColour { get; }
         public DelegateCommand ClickIcon { get; }
         public DelegateCommand<int?> RemoveUserCommand { get; }
-        public Command<object> ClickColourCommand { get; }
         public Command<object> ClickIconCommand { get; }
-        public bool ShowColours { get; set; }
         public bool ShowIcons { get; set; }
 
         public ObservableCollection<UserDto> UsersInGroup { get; set; } = new ObservableCollection<UserDto>();
         public GroupDto Group { get; set; }
         public RecordDto ShoutFromEdit { get; set; }
-        public String GroupName { get; set; }
-        public ObservableCollection<String> Colours { get; set; } = new ObservableCollection<String>();
         public bool IsEdit { get; set; } = false;
         public ObservableCollection<FileImageSource> Icons { get; set; }
 
+        private String m_GroupName = "";
+        public String GroupName
+        {
+            get
+            {
+                return m_GroupName;
+            }
+            set
+            {
+                m_GroupName = value;
+                RaisePropertyChanged(nameof(GroupName));
+                RaisePropertyChanged(nameof(CanSubmit));
+            }
+        }
+
+
+        private bool m_CanSubmit = false;
+        public bool CanSubmit
+        {
+            get
+            {
+                return m_CanSubmit;
+            }
+            set
+            {
+                m_CanSubmit = value;
+                RaisePropertyChanged(nameof(CanSubmit));
+            }
+        }
+
+        public void CheckSubmit()
+        {
+            RaisePropertyChanged(nameof(CanSubmit));
+        }
+
         public GroupPageViewModel(INavigationService navigationService, IEventAggregator eventAggregator) : base(navigationService)
         {
-            Button b = new Button();
-            //var x1 = (FileImageSource)ImageSource.FromFile("ic_coffee_outline_white_48dp.png");
-            //var x2 = (FileImageSource)ImageSource.FromFile("ic_food_croissant_white_48dp.png");
-            //Icons.Add(x1);
-            //Icons.Add(x2);
-
             m_NavigationService = navigationService;
             m_EventAggregator = eventAggregator;
-            CreateGroupCommand = new DelegateCommand(OnCreateGroupCommand);
+            CreateGroupCommand = new DelegateCommand(OnCreateGroupCommand, CreateCommandCanExecute).ObservesProperty(() => CanSubmit);
             AddUserToGroupCommand = new DelegateCommand(OnAddUserToGroupCommand);
             CancelCommand = new DelegateCommand(OnCancelCommand);
-            ClickColourCommand = new Command<object>(OnClickColourCommand);
-            ClickColour = new DelegateCommand(OnClickColour);
+
             ClickIconCommand = new Command<object>(OnClickIconCommand);
             ClickIcon = new DelegateCommand(OnClickIcon);
             RemoveUserCommand = new DelegateCommand<int?>(OnRemoveUserCommand);
             UsersInGroup.Add(new UserDto());
-            Colours = MyColours;
             Icons = new ObservableCollection<FileImageSource>(CurrentApp.MainViewModel.Icons);
         }
 
@@ -72,16 +94,16 @@ namespace NXT.ViewModels
         {
             if (IsEdit)
             {
-                if (CurrentApp.MainViewModel.GroupColourDictionary.ContainsKey(Group.ID))
-                {
-                    CurrentApp.MainViewModel.GroupColourDictionary[Group.ID] = SelectedColour;
-                }
-                else
-                {
-                    CurrentApp.MainViewModel.GroupColourDictionary.Add(Group.ID, SelectedColour);
-                }
+                //if (CurrentApp.MainViewModel.GroupColourDictionary.ContainsKey(Group.ID))
+                //{
+                //    CurrentApp.MainViewModel.GroupColourDictionary[Group.ID] = SelectedColour;
+                //}
+                //else
+                //{
+                //    CurrentApp.MainViewModel.GroupColourDictionary.Add(Group.ID, SelectedColour);
+                //}
 
-                await CurrentApp.MainViewModel.SaveGroupColours();
+                //await CurrentApp.MainViewModel.SaveGroupColours();
 
                 Group.Name = GroupName;
                 Group.Users = UsersInGroup.ToList();
@@ -106,11 +128,11 @@ namespace NXT.ViewModels
                 await CurrentApp.MainViewModel.ServiceApi.CreateGroupCommand(Group);
                 NavigationParameters nav = new NavigationParameters();
 
-                if(CurrentApp.MainViewModel.GroupColourDictionary == null )
+                if (CurrentApp.MainViewModel.GroupColourDictionary == null)
                 {
                     CurrentApp.MainViewModel.GroupColourDictionary = new Dictionary<Guid, string>();
                 }
-                CurrentApp.MainViewModel.GroupColourDictionary.Add(Group.ID, SelectedColour);
+                //CurrentApp.MainViewModel.GroupColourDictionary.Add(Group.ID, SelectedColour);
                 await CurrentApp.MainViewModel.SaveGroupColours();
 
                 var groups = await CurrentApp.MainViewModel.ServiceApi.GetGroups(Settings.Current.UserGuid.ToString());
@@ -119,6 +141,25 @@ namespace NXT.ViewModels
             }
 
             await CurrentApp.MainViewModel.SaveGroupColours();
+        }
+
+
+        private bool CreateCommandCanExecute()
+        {
+            if (String.IsNullOrEmpty(GroupName))
+            {
+                return false;
+            }
+
+            foreach (var u in UsersInGroup)
+            {
+                if (String.IsNullOrEmpty(u.Email) || String.IsNullOrEmpty(u.UserName))
+                {
+                    return false;
+                }
+            }
+            
+            return true;
         }
 
         public void OnCancelCommand()
@@ -136,20 +177,6 @@ namespace NXT.ViewModels
                 nav.Add("group", Group);
                 nav.Add("model", ShoutFromEdit);
                 bool result = await _navigationService.GoBackAsync(nav);
-            }
-        }
-
-        private string m_SelectedColour = "#d84315";
-        public string SelectedColour
-        {
-            get
-            {
-                return m_SelectedColour;
-            }
-            set
-            {
-                m_SelectedColour = value;
-                RaisePropertyChanged(nameof(SelectedColour));
             }
         }
 
@@ -181,17 +208,7 @@ namespace NXT.ViewModels
             }
         }
 
-        void OnClickColourCommand(object s)
-        {
-            SelectedColour = MyColours[(int)s];
-            OnClickColour();
-        }
 
-        public void OnClickColour()
-        {
-            ShowColours = !ShowColours;
-            RaisePropertyChanged(nameof(ShowColours));
-        }
 
         void OnClickIconCommand(object s)
         {
@@ -207,7 +224,6 @@ namespace NXT.ViewModels
 
         public void OnRemoveUserCommand(int? index)
         {
-            ShowColours = true;
             if (index.HasValue)
             {
                 UsersInGroup.RemoveAt(index.Value);
@@ -242,15 +258,15 @@ namespace NXT.ViewModels
                 //    UsersInGroup.Add(u);
                 //}
 
-                if (CurrentApp.MainViewModel.GroupColourDictionary.ContainsKey(Group.ID))
-                {
-                    SelectedColour = CurrentApp.MainViewModel.GroupColourDictionary[Group.ID];
-                }
+                //if (CurrentApp.MainViewModel.GroupColourDictionary.ContainsKey(Group.ID))
+                //{
+                //    SelectedColour = CurrentApp.MainViewModel.GroupColourDictionary[Group.ID];
+                //}
             }
             else
             {
                 Random r = new Random();
-                SelectedColour = MyColours[r.Next(19)];
+                //SelectedColour = MyColours[r.Next(19)];
             }
 
             if (parameters["shout"] != null)
@@ -261,9 +277,9 @@ namespace NXT.ViewModels
             if (parameters["edit"] != null)
             {
                 IsEdit = true;
+                RaisePropertyChanged(nameof(IsEdit));
             }
         }
-        public ObservableCollection<string> MyColours = new ObservableCollection<string>(CurrentApp.MainViewModel.Colours);
         //public ObservableCollection<string> MyColours = new ObservableCollection<string>() {
         //        "#c62828",//red
         //        "#ad1457",//pink

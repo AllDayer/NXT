@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             Title="{Binding Title}"
+             xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
+             xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
+             x:Class="NXT.Views.ProfilePage">
+    <ContentPage.ToolbarItems>
+        <!--<ToolbarItem Text="History" Command="{Binding HistoryCommand}" />
+        <ToolbarItem Text="Edit" Command="{Binding EditGroupCommand}" />-->
+    </ContentPage.ToolbarItems>
+
+    <StackLayout Margin="20" Spacing="15">
+        <Label Text="Profile" HorizontalOptions="Start" FontSize="Large" />
+
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Entry Placeholder="Name" Text="{Binding Name}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
+            <Label Text="Favourite Colour?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="0"/>
+            <Button Text="" 
+                Command="{Binding ClickColour}" 
+                BackgroundColor="{Binding SelectedColour}"
+                HeightRequest="50"  
+                WidthRequest="50" 
+                HorizontalOptions="Center"
+                Grid.Row="1" Grid.Column="1"/>
+
+        </Grid>
+        <control:GridListView 
+                        x:Name="GridColours"
+                        HorizontalOptions="FillAndExpand"
+                        VerticalOptions="FillAndExpand"
+                        RowSpacing="20"
+                        ColumnSpacing="20"
+                        MaxColumns="5"
+                        IsClippedToBounds="False"
+                        Command="{Binding ClickColourCommand}"
+                        CommandParameter="{Binding .}"
+                        ItemsSource="{Binding Colours}"
+                        />
+
+        <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">
+            <Button Text="Cancel" Command="{Binding CancelCommand}" BackgroundColor="#03A9F4" />
+            <Button Text="Save" Command="{Binding SaveProfileCommand}" BackgroundColor="#03A9F4"/>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

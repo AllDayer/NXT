@@ -35,7 +35,8 @@ namespace NXTWebService.Controllers
                                            {
                                                UserName = u.UserName,
                                                AvatarUrl = u.AvatarUrl,
-                                               ID = u.ID
+                                               ID = u.ID,
+                                               Colour = u.Colour
                                            }).ToList(),
                                   Records = (from record in db.Records
                                             where s.Records.Any(sh => sh.ID == record.ID)
@@ -84,6 +85,7 @@ namespace NXTWebService.Controllers
                                                UserName = u.UserName,
                                                ID = u.ID,
                                                AvatarUrl = u.AvatarUrl,
+                                               Colour = u.Colour,
                                                RecordCount = (from zx in db.Records
                                                              where zx.Group.ID == s.ID &&
                                                                    zx.User.ID == u.ID
@@ -127,6 +129,7 @@ namespace NXTWebService.Controllers
                                               UserName = u.UserName,
                                               ID = u.ID,
                                               AvatarUrl = u.AvatarUrl,
+                                              Colour = u.Colour,
                                               RecordCount = (from zx in db.Records
                                                             where zx.Group.ID == s.ID &&
                                                                   zx.User.ID == u.ID

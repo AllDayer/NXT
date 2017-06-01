@@ -46,8 +46,9 @@
                                         Source="{Binding WhoseShout.AvatarUrl, Converter={StaticResource AvatarConverter}}"
                                         />
 
-                    <StackLayout Grid.Column="1">
-                        <Label Text="{Binding WhoseShoutDisplay}" TextColor="White"  FontSize="Large" />
+                    <StackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="{Binding WhoseShoutDisplay}" TextColor="White"  FontSize="Large" FontAttributes="Bold" />
+                        <Label Text="Is NXT" TextColor="White"  FontSize="Micro" Margin="0" FontAttributes="Italic"/>
                         <Label Text="{Binding Name}" TextColor="White"  LineBreakMode="WordWrap" />
 
                     </StackLayout>

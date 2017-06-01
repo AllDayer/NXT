@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="NXT.NXT" android:versionCode="1" android:versionName="1.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.tristan.nxt" android:versionCode="1" android:versionName="1.0">
 	<uses-sdk android:minSdkVersion="19" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<application android:label="com.tristan.nxt" android:theme="@style/MyTheme" android:icon="@drawable/icon">
+	<application android:theme="@style/MyTheme" android:icon="@drawable/icon" android:label="NXT">
 		<activity android:name="com.tristan.nxt.MainActivity" android:label="NXT" />
 		<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="842344439275386" />
 	</application>

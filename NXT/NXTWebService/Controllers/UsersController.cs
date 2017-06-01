@@ -66,7 +66,8 @@ namespace NXTWebService.Controllers
                 UserName = user.UserName,
                 AuthType = AuthType.Facebook,
                 SocialID = user.FacebookID,
-                AvatarUrl = user.AvatarUrl                
+                AvatarUrl = user.AvatarUrl,
+                Colour = user.Colour
             };
 
             return Ok(ret);

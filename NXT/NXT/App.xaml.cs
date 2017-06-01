@@ -29,6 +29,7 @@ namespace NXT
             Container.RegisterTypeForNavigation<HistoryPage>();
 
             Container.Register<IAuthenticationService, AuthenticationService>(Reuse.Singleton);
+            Container.RegisterTypeForNavigation<ProfilePage>();
         }
     }
 }

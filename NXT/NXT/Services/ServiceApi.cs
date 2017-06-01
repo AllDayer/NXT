@@ -109,6 +109,26 @@ namespace NXT.Services
             }
         }
 
+        public async Task<UserDto> PatchDtoUser(UserDto user)
+        {
+            User u = new User();
+            u.AvatarUrl = user.AvatarUrl;
+            u.Colour = user.Colour;
+            u.Email = user.Email;
+            u.ID = user.ID;
+            u.UserName = user.UserName;
+            switch(user.AuthType)
+            {
+                case AuthType.Facebook:
+                    {
+                        u.FacebookID = user.SocialID;
+                        break;
+                    }
+            }
+
+            return await PatchUser(u);
+        }
+
         public async Task<UserDto> PatchUser(User user)
         {
             try

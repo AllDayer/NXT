@@ -7,6 +7,7 @@
     xmlns:ptr="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
     x:Class="NXT.Views.SummaryPage">
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Profile" Command="{Binding ProfileCommand}" />
         <ToolbarItem Text="Logout" Command="{Binding LogoutCommand}" />
     </ContentPage.ToolbarItems>
 

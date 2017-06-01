@@ -12,16 +12,23 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <helper:IconIndexConverter x:Key="IconIndexConverter"/>
+            <helper:InveseBooleanConverter x:Key="InveseBooleanConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
     <ScrollView>
         <control:CardView>
             <StackLayout Margin="5">
-                <Entry Placeholder="Group name" Text="{Binding GroupName}"/>
+                <Entry Placeholder="What's NXT?" Text="{Binding GroupName}"/>
 
-                <control:UserRepeaterView x:Name="repeater" ItemsSource="{Binding UsersInGroup}"  />
 
-                <control:CustomImageButton Image="ic_account_plus_white_48dp.png" BackgroundColor="Transparent" BorderColor="Transparent" Command="{Binding AddUserToGroupCommand}"/>
+                        <Label Text="Who is joining in?"/>
+                        <control:UserRepeaterView x:Name="repeater" ItemsSource="{Binding UsersInGroup}"  />
+
+                        <control:CustomImageButton Image="ic_account_plus_white_48dp.png" 
+                                           BackgroundColor="Transparent" 
+                                           BorderColor="Transparent" 
+                                           Command="{Binding AddUserToGroupCommand}"
+                                           IsVisible="{Binding IsEdit, Converter={StaticResource InveseBooleanConverter}}"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -41,14 +48,14 @@
                     <Switch x:Name="toggle" IsToggled="{Binding TrackCost}" Grid.Row="1" Grid.Column="2" 
                         HorizontalOptions="Center"/>
 
-                    <Label Text="Favourite Colour?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="2" Grid.Column="1"/>
+                    <!--<Label Text="Favourite Colour?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="2" Grid.Column="1"/>
                     <Button Text="" 
                         Command="{Binding ClickColour}" 
                         BackgroundColor="{Binding SelectedColour}"
                         HeightRequest="50"  
                         WidthRequest="50" 
                         HorizontalOptions="Center"
-                        Grid.Row="2" Grid.Column="2"/>
+                        Grid.Row="2" Grid.Column="2"/>-->
 
                     <Label Text="Icon?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="3" Grid.Column="1"/>
                     <control:CustomImageButton Text="" 
@@ -80,19 +87,7 @@
 
 
                 </StackLayout>
-                <control:GridListView 
-                        x:Name="GridColours"
-                        HorizontalOptions="FillAndExpand"
-                        Grid.Row="1"
-                        VerticalOptions="FillAndExpand"
-                        RowSpacing="20"
-                        ColumnSpacing="20"
-                        MaxColumns="5"
-                        IsClippedToBounds="False"
-                        Command="{Binding ClickColourCommand}"
-                        CommandParameter="{Binding .}"
-                        ItemsSource="{Binding Colours}"
-                        />
+
 
                 <!--<Picker ItemsSource="{Binding MyCountries}" SelectedIndex="{Binding SelectedIndex}"/>-->
                 <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">

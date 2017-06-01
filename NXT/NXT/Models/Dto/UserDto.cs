@@ -13,6 +13,7 @@ namespace NXTWebService.Models
         public string SocialID { get; set; }
         public AuthType AuthType { get; set; }
         public String AvatarUrl { get; set; }
+        public String Colour { get; set; }
 
         public override string ToString()
         {

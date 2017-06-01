@@ -21,10 +21,6 @@ namespace NXT.Views
         {
             repeater.ParentVM = BindingContext;
             base.OnBindingContextChanged();
-            GridColours.IsVisible = false;
-            GridColours.Opacity = 0;
-            GridIcons.IsVisible = false;
-            GridIcons.Opacity = 0;
 
             //var tapGestureRecognizer = new TapGestureRecognizer
             //{
@@ -36,28 +32,15 @@ namespace NXT.Views
             //Hello.GestureRecognizers.Add(tapGestureRecognizer);
             if (BindingContext != null)
             {
-                ((GroupPageViewModel)BindingContext).PropertyChanged += ShoutGroupPage_PropertyChanged;
+                ((GroupPageViewModel)BindingContext).PropertyChanged += GroupPage_PropertyChanged;
             }
+            GridIcons.IsVisible = false;
+            GridIcons.Opacity = 0;
         }
 
-        private void ShoutGroupPage_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void GroupPage_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "ShowColours")
-            {
-                if (((GroupPageViewModel)sender).ShowColours)
-                {
-                    GridColours.IsVisible = true;
-                    GridColours.FadeTo(1, 300, Easing.CubicIn);
-                }
-                else
-                {
-                    var animation = new Animation(v => GridColours.Opacity = v, 1, 0);
-                    animation.Commit(this, "FadeColours", 16, 250, Easing.CubicOut, (v,c) => this.GridColours.IsVisible = false);
-                    //GridColours.FadeTo(0, 300, Easing.CubicOut);
-                    //GridColours.IsVisible = false;
-                }
-            }
-            else if (e.PropertyName == "ShowIcons")
+            if (e.PropertyName == "ShowIcons")
             {
                 if (((GroupPageViewModel)sender).ShowIcons)
                 {

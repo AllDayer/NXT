@@ -266,6 +266,10 @@
     <Compile Include="Migrations\201705310934539_Initial.Designer.cs">
       <DependentUpon>201705310934539_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706011108212_UserColour.cs" />
+    <Compile Include="Migrations\201706011108212_UserColour.Designer.cs">
+      <DependentUpon>201706011108212_UserColour.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -347,6 +351,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201705310934539_Initial.resx">
       <DependentUpon>201705310934539_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706011108212_UserColour.resx">
+      <DependentUpon>201706011108212_UserColour.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

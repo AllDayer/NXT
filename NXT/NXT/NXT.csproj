@@ -46,6 +46,7 @@
     <Compile Include="Helpers\FileStorage.cs" />
     <Compile Include="Helpers\HttpClientExtension.cs" />
     <Compile Include="Helpers\IconIndexConverter.cs" />
+    <Compile Include="Helpers\InveseBooleanConverter.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Models\Dto\RecordDto.cs" />
     <Compile Include="Models\Dto\GroupDto.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\GroupPageViewModel.cs" />
+    <Compile Include="ViewModels\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\SummaryPageViewModel.cs" />
     <Compile Include="Views\GridItemTemplate.xaml.cs">
       <DependentUpon>GridItemTemplate.xaml</DependentUpon>
@@ -85,6 +87,9 @@
     <!--<Compile Include="Views\ShoutSummaryGroupCard.cs" />-->
     <Compile Include="Views\AddUserToGroupCard.xaml.cs">
       <DependentUpon>AddUserToGroupCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProfilePage.xaml.cs">
+      <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SummaryGroupCard.xaml.cs">
       <DependentUpon>SummaryGroupCard.xaml</DependentUpon>
@@ -242,6 +247,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\ProfilePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.4.247\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.4.247\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
