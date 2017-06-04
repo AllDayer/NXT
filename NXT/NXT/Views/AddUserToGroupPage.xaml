@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="NXT.Views.AddUserToGroupPage">
+
+    <StackLayout Spacing="10" Margin="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="25"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Image Source="ic_label_outline_white_18dp"  HorizontalOptions="End" Grid.Column="0" Grid.Row="0" />
+            <Image Source="ic_email_outline_white_18dp" HorizontalOptions="End" Grid.Column="0" Grid.Row="1" />
+
+            <!--<Label Text="Add a friends email and we'll send them an invite" />-->
+            <Entry x:Name="name" Placeholder="Name" Text="{Binding NewUserForGroup.UserName}" Grid.Column="1" Grid.Row="0"/>
+            <Entry x:Name="email" Placeholder="Email" Text="{Binding NewUserForGroup.Email}" Grid.Column="1" Grid.Row="1"/>
+
+        </Grid>
+
+        <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">
+            <Button Text="Cancel" Command="{Binding CancelCommand}" BackgroundColor="#03A9F4" />
+            <Button Text="Save" Command="{Binding SaveCommand}" BackgroundColor="#03A9F4"/>
+        </StackLayout>
+    </StackLayout>
+
+</ContentPage>

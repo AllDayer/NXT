@@ -111,6 +111,8 @@ namespace NXT.Services
 
         public async Task<UserDto> PatchDtoUser(UserDto user)
         {
+            Settings.Current.User = user;
+
             User u = new User();
             u.AvatarUrl = user.AvatarUrl;
             u.Colour = user.Colour;
@@ -135,7 +137,6 @@ namespace NXT.Services
             {
                 using (var client = NewHttpClient())
                 {
-
                     var response = await PatchAsJsonAsync(client, "api/users/" + user.ID, user);
                     response.EnsureSuccessStatusCode();
                     return await ReadAsAsync<UserDto>(response.Content);

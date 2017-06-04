@@ -59,7 +59,7 @@ namespace NXT.Views
 
         private void SetRepeater()
         {
-            repeater.ParentVM = BindingContext;
+            //repeater.ParentVM = BindingContext;
             //repeater.ItemsSource = ((ShoutGroupPageViewModel)BindingContext).UsersInGroup;
         }
 

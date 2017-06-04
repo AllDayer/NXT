@@ -5,6 +5,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
              xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
+             xmlns:circle="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
              x:Class="NXT.Views.GroupPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" />
@@ -13,24 +14,37 @@
         <ResourceDictionary>
             <helper:IconIndexConverter x:Key="IconIndexConverter"/>
             <helper:InveseBooleanConverter x:Key="InveseBooleanConverter"/>
+            <helper:AvatarConverter x:Key="AvatarConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <ScrollView>
-        <control:CardView>
-            <StackLayout Margin="5">
-                <Entry Placeholder="What's NXT?" Text="{Binding GroupName}"/>
+    <StackLayout Margin="5" Spacing="10" VerticalOptions="StartAndExpand">
+        <Label Text="What's NXT??" FontSize="Medium" TextColor="White"/>
 
+        <Entry Placeholder="Name" Text="{Binding GroupName}"/>
+        <Label Text="Who is joining in?" FontSize="Medium" TextColor="White"/>
 
-                        <Label Text="Who is joining in?"/>
-                        <control:UserRepeaterView x:Name="repeater" ItemsSource="{Binding UsersInGroup}"  />
+        <ScrollView Orientation="Horizontal">
+            <control:UserCircleRepeaterView x:Name="repeater" ItemsSource="{Binding UsersInGroup}"  />
+        </ScrollView>
+            <!--<Button Text="More" Command="{Binding ClickExtrasCommand}" BackgroundColor="Transparent" />-->
 
-                        <control:CustomImageButton Image="ic_account_plus_white_48dp.png" 
+        <control:CustomImageButton Text="Options" Command="{Binding ClickExtrasCommand}" BackgroundColor="Transparent" HorizontalOptions="End"/>
+        <ScrollView HorizontalOptions="EndAndExpand" VerticalOptions="StartAndExpand">
+            <!--<control:CardView>-->
+            <StackLayout Margin="5" VerticalOptions="StartAndExpand" >
+
+                <Label Text="Extras" FontSize="Large" IsVisible="{Binding ShowExtras}"/>
+
+                <!--<Label Text="Who is joining in?"/>-->
+                <!--<control:UserRepeaterView x:Name="repeater" ItemsSource="{Binding UsersInGroup}"  />-->
+
+                <!--<control:CustomImageButton Image="ic_account_plus_white_48dp.png" 
                                            BackgroundColor="Transparent" 
                                            BorderColor="Transparent" 
                                            Command="{Binding AddUserToGroupCommand}"
-                                           IsVisible="{Binding IsEdit, Converter={StaticResource InveseBooleanConverter}}"/>
+                                           IsVisible="{Binding IsEdit, Converter={StaticResource InveseBooleanConverter}}"/>-->
 
-                <Grid>
+                <Grid IsVisible="{Binding ShowExtras}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1"/>
                         <ColumnDefinition Width="3*"/>
@@ -70,7 +84,7 @@
                 </Grid>
 
 
-                <StackLayout>
+                <StackLayout IsVisible="{Binding ShowExtras}">
                     <control:GridListView 
                         x:Name="GridIcons"
                         HorizontalOptions="FillAndExpand"
@@ -84,10 +98,7 @@
                         CommandParameter="{Binding .}"
                         ItemsSource="{Binding Icons}"
                         />
-
-
                 </StackLayout>
-
 
                 <!--<Picker ItemsSource="{Binding MyCountries}" SelectedIndex="{Binding SelectedIndex}"/>-->
                 <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">
@@ -96,6 +107,7 @@
                 </StackLayout>
 
             </StackLayout>
-        </control:CardView>
-    </ScrollView>
+            <!--</control:CardView>-->
+        </ScrollView>
+    </StackLayout>
 </ContentPage>

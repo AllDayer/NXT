@@ -22,6 +22,7 @@ namespace NXT.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            Xamarin.Facebook.FacebookSdk.SdkInitialize(this.ApplicationContext);
             Refractored.XamForms.PullToRefresh.Droid.PullToRefreshLayoutRenderer.Init();
             ImageCircle.Forms.Plugin.Droid.ImageCircleRenderer.Init();
             Xamarin.Auth.Presenters.OAuthLoginPresenter.PlatformLogin = (authenticator) =>

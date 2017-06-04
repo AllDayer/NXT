@@ -100,12 +100,54 @@ namespace NXT.Helpers
             set { SetProperty(value); }
         }
 
-        public String AvatarUrl
+        public string AvatarUrl
         {
             get { return GetProperty<String>(); }
             set { SetProperty(value); }
         }
-        
+
+        public string Colour
+        {
+            get { return GetProperty<string>(); }
+            set { SetProperty(value); }
+        }
+
+        public UserDto User
+        {
+            get
+            {
+                UserDto u = new UserDto()
+                {
+                    UserName = UserName,
+                    ID = UserGuid,
+                    Email = UserEmail,
+                    AvatarUrl = AvatarUrl,
+                    Colour = Colour,
+                    //UserFirstName = value.UserName;
+                };
+
+                switch (UserAuth)
+                {
+                    case AuthType.Facebook:
+                        u.AuthType = AuthType.Facebook;
+                        u.SocialID = SocialUserID;
+                        break;
+                }
+                return u;
+            }
+            set
+            {
+                UserName = value.UserName;
+                UserGuid = value.ID;
+                SocialUserID = value.SocialID;
+                UserFirstName = value.UserName;
+                UserEmail = value.Email;
+                AvatarUrl = value.AvatarUrl;
+                UserAuth = value.AuthType;
+                Colour = value.Colour;
+            }
+        }
+
         public ObservableCollection<GroupDto> Groups { get; set; }
     }
 }

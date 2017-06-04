@@ -54,15 +54,21 @@
     <Compile Include="Models\Record.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\GroupIcon.cs" />
+    <Compile Include="Models\Social\FacebookModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\SocialUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Models\Enums.cs" />
+    <Compile Include="Services\FbAccessToken.cs" />
     <Compile Include="Services\IAuthenticationService.cs" />
+    <Compile Include="Services\IFacebookLogin.cs" />
+    <Compile Include="Services\IGraphRequest.cs" />
+    <Compile Include="Services\IGraphResponse.cs" />
     <Compile Include="Services\ISaveAndLoad.cs" />
     <Compile Include="Services\Messages.cs" />
     <Compile Include="Services\ServiceApi.cs" />
+    <Compile Include="ViewModels\AddUserToGroupPageViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\BuyPageViewModel.cs" />
     <Compile Include="ViewModels\HistoryPageViewModel.cs" />
@@ -72,6 +78,12 @@
     <Compile Include="ViewModels\GroupPageViewModel.cs" />
     <Compile Include="ViewModels\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\SummaryPageViewModel.cs" />
+    <Compile Include="Views\AddUserToGroupPage.xaml.cs">
+      <DependentUpon>AddUserToGroupPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CircleUserRepeat.xaml.cs">
+      <DependentUpon>CircleUserRepeat.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GridItemTemplate.xaml.cs">
       <DependentUpon>GridItemTemplate.xaml</DependentUpon>
     </Compile>
@@ -250,6 +262,18 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\ProfilePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\CircleUserRepeat.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\AddUserToGroupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

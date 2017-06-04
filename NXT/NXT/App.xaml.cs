@@ -30,6 +30,7 @@ namespace NXT
 
             Container.Register<IAuthenticationService, AuthenticationService>(Reuse.Singleton);
             Container.RegisterTypeForNavigation<ProfilePage>();
+            Container.RegisterTypeForNavigation<AddUserToGroupPage>();
         }
     }
 }

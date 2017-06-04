@@ -25,7 +25,26 @@ namespace NXT.Controls
 
         protected override View ViewFor(object vm, object parentVM, string bgColour, int i)
         {
-            return new AddUserToGroupCard() { ShoutGroupVM = (GroupPageViewModel)parentVM, BindingContext = vm, Index = i };
+            return new AddUserToGroupCard() { ShoutGroupVM = (GroupPageViewModel)parentVM, Index = i, BindingContext = vm  };
+        }
+    }
+
+    public class UserCircleRepeaterView : RepeaterView<UserDto>
+    {
+        private List<BaseViewModel> m_ViewModels;
+
+        public UserCircleRepeaterView()
+        {
+            this.HorizontalOptions = LayoutOptions.FillAndExpand;
+            this.VerticalOptions = LayoutOptions.Start;
+            this.Orientation = StackOrientation.Horizontal;
+            this.Margin = 5;
+            m_ViewModels = new List<BaseViewModel>();
+        }
+
+        protected override View ViewFor(object vm, object parentVM, string bgColour, int i)
+        {
+            return new CircleUserRepeat() { ShoutGroupVM = (GroupPageViewModel)parentVM, Index = i, BindingContext = vm, };
         }
     }
 
@@ -90,6 +109,8 @@ namespace NXT.Controls
 
             if (e.NewItems != null)
             {
+
+                //Fix this for circle view
                 var control = this as RepeaterView<T>;
                 int i = ItemsSource.Count > 0 ? ItemsSource.Count - 1 : 0;
                 foreach (T item in e.NewItems)

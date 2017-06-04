@@ -57,7 +57,7 @@ namespace NXT.ViewModels
             m_NavigationService = navigationService;
             ClickColourCommand = new Command<object>(OnClickColourCommand);
             ClickColour = new DelegateCommand(OnClickColour);
-            SaveProfileCommand = new DelegateCommand(OnSaveProfileCommand);
+            SaveProfileCommand = new DelegateCommand(OnSaveProfileCommand, CanExecuteOnSave).ObservesProperty(() => Name); ;
             CancelCommand = new DelegateCommand(OnCancelCommand);
             Colours = MyColours;
         }
@@ -74,6 +74,11 @@ namespace NXT.ViewModels
             User.UserName = Name;
             await CurrentApp.MainViewModel.ServiceApi.PatchDtoUser(User);
             await m_NavigationService.GoBackAsync();
+        }
+
+        private bool CanExecuteOnSave()
+        {
+            return !String.IsNullOrEmpty(Name);
         }
 
         public void OnClickColour()
@@ -100,11 +105,11 @@ namespace NXT.ViewModels
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
             User = (UserDto)parameters["model"];
-            if (User.Colour != null)
+            if (!String.IsNullOrEmpty(User.Colour))
             {
                 SelectedColour = User.Colour;
-                Name = User.UserName;
             }
+            Name = User.UserName;
 
             RaisePropertyChanged("UserName");
         }
