@@ -33,9 +33,19 @@ namespace NXT.Views
             if (BindingContext != null)
             {
                 ((GroupPageViewModel)BindingContext).PropertyChanged += GroupPage_PropertyChanged;
+                LeaveGroup.Clicked += LeaveGroup_Clicked;
             }
             GridIcons.IsVisible = false;
             GridIcons.Opacity = 0;
+        }
+
+        private async void LeaveGroup_Clicked(object sender, System.EventArgs e)
+        {
+            var action = await DisplayAlert("Leave Group?", "Are you sure you want to leave this group?", "Yes", "No");
+            if (action)
+            {
+                ((GroupPageViewModel)this.BindingContext).OnLeaveGroupCommand();
+            }
         }
 
         private void GroupPage_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -43,10 +43,5 @@ namespace NXT.Views
             //this.Remove.Clicked += Remove_Clicked;
             //this.Remove.SetBinding(IsVisibleProperty, new Binding("IsEdit", BindingMode.Default, new InveseBooleanConverter(), null, null, ShoutGroupVM));
         }
-
-        private void Remove_Clicked(object sender, EventArgs e)
-        {
-            ShoutGroupVM.RemoveUserCommand.Execute(Index);
-        }
     }
 }

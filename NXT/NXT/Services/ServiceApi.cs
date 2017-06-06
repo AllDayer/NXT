@@ -17,6 +17,13 @@ namespace NXT.Services
         public string Token { get; set; }
         public string Url { get; set; } = "http://nxtwebservice20170531075349.azurewebsites.net/";
 
+        HttpClient client;
+
+        public ServiceApi()
+        {
+            client = NewHttpClient();
+        }
+
         private async Task<T> ReadAsAsync<T>(HttpContent content)
         {
             string contentString = await content.ReadAsStringAsync();
@@ -79,12 +86,9 @@ namespace NXT.Services
         {
             try
             {
-                using (var client = NewHttpClient())
-                {
-                    var response = await client.GetAsync("api/users?socialId=" + socialID + "&authType=" + authType);
-                    response.EnsureSuccessStatusCode();
-                    return await ReadAsAsync<UserDto>(response.Content);
-                }
+                var response = await client.GetAsync("api/users?socialId=" + socialID + "&authType=" + authType);
+                response.EnsureSuccessStatusCode();
+                return await ReadAsAsync<UserDto>(response.Content);
             }
             catch (Exception)
             {
@@ -96,12 +100,9 @@ namespace NXT.Services
         {
             try
             {
-                using (var client = NewHttpClient())
-                {
-                    var response = await client.GetAsync("api/users?email=" + email);
-                    response.EnsureSuccessStatusCode();
-                    return await ReadAsAsync<UserDto>(response.Content);
-                }
+                var response = await client.GetAsync("api/users?email=" + email);
+                response.EnsureSuccessStatusCode();
+                return await ReadAsAsync<UserDto>(response.Content);
             }
             catch (Exception)
             {
@@ -119,7 +120,7 @@ namespace NXT.Services
             u.Email = user.Email;
             u.ID = user.ID;
             u.UserName = user.UserName;
-            switch(user.AuthType)
+            switch (user.AuthType)
             {
                 case AuthType.Facebook:
                     {
@@ -135,12 +136,9 @@ namespace NXT.Services
         {
             try
             {
-                using (var client = NewHttpClient())
-                {
-                    var response = await PatchAsJsonAsync(client, "api/users/" + user.ID, user);
-                    response.EnsureSuccessStatusCode();
-                    return await ReadAsAsync<UserDto>(response.Content);
-                }
+                var response = await PatchAsJsonAsync(client, "api/users/" + user.ID, user);
+                response.EnsureSuccessStatusCode();
+                return await ReadAsAsync<UserDto>(response.Content);
             }
             catch (Exception)
             {
@@ -152,11 +150,8 @@ namespace NXT.Services
         {
             try
             {
-                using (var client = NewHttpClient())
-                {
-                    var response = await PostAsJsonAsync(client, "api/users", user);
-                    response.EnsureSuccessStatusCode();
-                }
+                var response = await PostAsJsonAsync(client, "api/users", user);
+                response.EnsureSuccessStatusCode();
             }
             catch (Exception)
             {
@@ -169,11 +164,8 @@ namespace NXT.Services
         {
             try
             {
-                using (var client = NewHttpClient())
-                {
-                    var response = await PostAsJsonAsync(client, "api/groups", group);
-                    response.EnsureSuccessStatusCode();
-                }
+                var response = await PostAsJsonAsync(client, "api/groups", group);
+                response.EnsureSuccessStatusCode();
             }
             catch (Exception)
             {
@@ -185,11 +177,8 @@ namespace NXT.Services
         {
             try
             {
-                using (var client = NewHttpClient())
-                {
-                    var response = await PutAsJsonAsync(client, "api/groups/" + group.ID, group);
-                    response.EnsureSuccessStatusCode();
-                }
+                var response = await PutAsJsonAsync(client, "api/groups/" + group.ID, group);
+                response.EnsureSuccessStatusCode();
             }
             catch (Exception e)
             {
@@ -201,29 +190,38 @@ namespace NXT.Services
         {
             try
             {
-                using (var client = NewHttpClient())
-                {
-                    var response = await client.GetAsync("api/groups?userid=" + userId);
-                    response.EnsureSuccessStatusCode();
-                    return await ReadAsAsync<List<GroupDto>>(response.Content);
-                }
+                var response = await client.GetAsync("api/groups?userid=" + userId);
+                response.EnsureSuccessStatusCode();
+                return await ReadAsAsync<List<GroupDto>>(response.Content);
             }
             catch (Exception)
             {
                 return null;
             }
         }
+
+        public async Task<bool> LeaveGroup(string groupId, string userId)
+        {
+            try
+            {
+                var response = await client.PostAsync("api/groups?leaveGroupId=" + groupId + "&userid=" + userId, new StringContent(""));
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
 
         public async Task<List<RecordDto>> GetRecordsForGroup(string groupId)
         {
             try
             {
-                using (var client = NewHttpClient())
-                {
-                    var response = await client.GetAsync("api/records?groupid=" + groupId);
-                    response.EnsureSuccessStatusCode();
-                    return await ReadAsAsync<List<RecordDto>>(response.Content);
-                }
+                var response = await client.GetAsync("api/records?groupid=" + groupId);
+                response.EnsureSuccessStatusCode();
+                return await ReadAsAsync<List<RecordDto>>(response.Content);
             }
             catch (Exception)
             {
@@ -231,16 +229,12 @@ namespace NXT.Services
             }
         }
 
-
         public async Task NewRecord(RecordDto shout)
         {
             try
             {
-                using (var client = NewHttpClient())
-                {
-                    var response = await PostAsJsonAsync(client, "api/records", shout);
-                    response.EnsureSuccessStatusCode();
-                }
+                var response = await PostAsJsonAsync(client, "api/records", shout);
+                response.EnsureSuccessStatusCode();
             }
             catch (Exception)
             {
@@ -252,10 +246,7 @@ namespace NXT.Services
         {
             try
             {
-                using (var client = NewHttpClient())
-                {
-                    return await client.GetByteArrayAsync(Url);
-                }
+                return await client.GetByteArrayAsync(Url);
             }
             catch (Exception)
             {

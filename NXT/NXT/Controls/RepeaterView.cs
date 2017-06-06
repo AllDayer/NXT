@@ -105,6 +105,17 @@ namespace NXT.Controls
                 this.Children.RemoveAt(e.OldStartingIndex);
                 this.UpdateChildrenLayout();
                 this.InvalidateLayout();
+
+                int i = 0;
+                foreach(var child in this.Children)
+                {
+                    if(child is CircleUserRepeat)
+                    {
+                        ((CircleUserRepeat)child).Index = i;
+                    }
+
+                    i++;
+                }
             }
 
             if (e.NewItems != null)

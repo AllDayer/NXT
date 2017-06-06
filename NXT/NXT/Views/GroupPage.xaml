@@ -33,8 +33,6 @@
             <!--<control:CardView>-->
             <StackLayout Margin="5" VerticalOptions="StartAndExpand" >
 
-                <Label Text="Extras" FontSize="Large" IsVisible="{Binding ShowExtras}"/>
-
                 <!--<Label Text="Who is joining in?"/>-->
                 <!--<control:UserRepeaterView x:Name="repeater" ItemsSource="{Binding UsersInGroup}"  />-->
 
@@ -56,6 +54,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <Label Text="Track Cost?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="1"/>
@@ -71,6 +70,7 @@
                         HorizontalOptions="Center"
                         Grid.Row="2" Grid.Column="2"/>-->
 
+                    
                     <Label Text="Icon?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="3" Grid.Column="1"/>
                     <control:CustomImageButton Text="" 
                                                 Image="{Binding SelectedIconIndex, Converter={StaticResource IconIndexConverter}}"
@@ -80,6 +80,7 @@
                                                 WidthRequest="50" 
                                                 HorizontalOptions="Center"
                                                 Grid.Row="3" Grid.Column="2"/>
+
 
                 </Grid>
 
@@ -99,9 +100,10 @@
                         ItemsSource="{Binding Icons}"
                         />
                 </StackLayout>
-
+                
                 <!--<Picker ItemsSource="{Binding MyCountries}" SelectedIndex="{Binding SelectedIndex}"/>-->
                 <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">
+                    <Button x:Name="LeaveGroup" Text="Leave Group" IsVisible="{Binding ShowLeaveGroup}" BackgroundColor="#c62828" />
                     <Button Text="Cancel" Command="{Binding CancelCommand}" BackgroundColor="#03A9F4" />
                     <Button Text="Save" Command="{Binding CreateGroupCommand}" BackgroundColor="#03A9F4"/>
                 </StackLayout>

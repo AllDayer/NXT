@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
+             Title="Add Group Member"
              x:Class="NXT.Views.AddUserToGroupPage">
 
     <StackLayout Spacing="10" Margin="10">

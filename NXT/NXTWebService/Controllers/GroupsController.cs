@@ -249,6 +249,62 @@ namespace NXTWebService.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+
+        // PUT: api/Groups/<guid>
+        // Not tested
+        [ResponseType(typeof(void))]
+        public IHttpActionResult LeaveGroup(Guid leaveGroupId, Guid UserId)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Group group = db.Groups.Include(sgi => sgi.GroupIcon).Include(u => u.Users).FirstOrDefault(x => x.ID == leaveGroupId);
+
+            db.Groups.Attach(group);
+
+            var user = db.NXTUsers.FirstOrDefault(x => x.ID == UserId);
+            if(user != null)
+            {
+                group.Users.Remove(user);
+                if(group.Users.Count <= 1)
+                {
+                    db.Groups.Remove(group);
+                    db.SaveChanges();
+                    return Ok(group);
+                }
+                //TODO modify when adding new auth
+                else if(group.Users.Count > 1 && !group.Users.Any(x => x.FacebookID.Length > 0 || x.TwitterID.Length > 0))
+                {
+                    db.Groups.Remove(group);
+                    db.SaveChanges();
+                    return Ok(group);
+                }
+            }
+
+            db.Entry(group).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!GroupExists(leaveGroupId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(group);
+        }
+
         // POST: api/Groups
         [ResponseType(typeof(GroupDto))]
         public IHttpActionResult PostGroup(GroupDto groupDto)

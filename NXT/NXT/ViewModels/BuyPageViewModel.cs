@@ -13,13 +13,14 @@ namespace NXT.ViewModels
     public class BuyPageViewModel : BaseViewModel
     {
         INavigationService m_NavigationService;
-        private RecordDto m_Shout = new RecordDto();
-        private GroupDto m_ShoutGroup = new GroupDto();
+        private RecordDto m_Record = new RecordDto() { PurchaseTimeUtc = DateTime.UtcNow };
+        private GroupDto m_Group = new GroupDto();
 
         public DelegateCommand BuyCommand { get; }
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand EditGroupCommand { get; }
         public DelegateCommand HistoryCommand { get; }
+        public DelegateCommand ShowTimeCommand { get; }
 
         public ObservableCollection<UserDto> UsersForRecord { get; set; }
 
@@ -31,6 +32,7 @@ namespace NXT.ViewModels
             CancelCommand = new DelegateCommand(OnCancelCommand);
             EditGroupCommand = new DelegateCommand(OnEditGroupCommand);
             HistoryCommand = new DelegateCommand(OnHistoryCommand);
+            ShowTimeCommand = new DelegateCommand(OnShowTimeCommand);
             UsersForRecord = new ObservableCollection<UserDto>();
         }
 
@@ -39,11 +41,11 @@ namespace NXT.ViewModels
         {
             get
             {
-                return m_Shout.ID.ToString();
+                return m_Record.ID.ToString();
             }
             set
             {
-                m_Shout.ID = new Guid(value);
+                m_Record.ID = new Guid(value);
                 RaisePropertyChanged(nameof(ID));
             }
         }
@@ -52,16 +54,16 @@ namespace NXT.ViewModels
         {
             get
             {
-                return m_Shout.GroupID.ToString();
+                return m_Record.GroupID.ToString();
             }
         }
 
 
-        public String ShoutTitle
+        public String RecordTitle
         {
             get
             {
-                return m_Shout.GroupName;
+                return m_Record.GroupName;
             }
         }
 
@@ -69,7 +71,7 @@ namespace NXT.ViewModels
         {
             get
             {
-                return m_ShoutGroup.TrackCost;
+                return m_Group.TrackCost;
             }
         }
 
@@ -77,13 +79,13 @@ namespace NXT.ViewModels
         {
             get
             {
-                return m_Shout.Cost.ToString();
+                return m_Record.Cost.ToString();
             }
             set
             {
                 float cost = 0;
                 float.TryParse(value, out cost);
-                m_Shout.Cost = cost;
+                m_Record.Cost = cost;
                 RaisePropertyChanged(nameof(Cost));
             }
         }
@@ -138,20 +140,36 @@ namespace NXT.ViewModels
             }
         }
 
+        public RecordDto Record
+        {
+            get
+            {
+                return m_Record;
+            }
+            set
+            {
+                m_Record = value;
+                RaisePropertyChanged(nameof(Record));
+            }
+        }
+
+        public bool ShowTime { get; set; } = false;
+
+        public TimeSpan Time { get; set; } = DateTime.Now.TimeOfDay;
+
         private bool BuyCommandCanExecute() => UserDto != null;
 
         public async void OnBuyCommand()
         {
-            m_Shout.PurchaseTimeUtc = DateTime.UtcNow;
-            m_Shout.UserID = UserDto.ID;
-            m_Shout.GroupID = new Guid(GroupID);
-            m_Shout.Cost = (float.Parse(Cost));
+            m_Record.UserID = UserDto.ID;
+            m_Record.GroupID = new Guid(GroupID);
+            m_Record.Cost = (float.Parse(Cost));
+            if (m_Record.PurchaseTimeUtc == DateTime.MinValue)
+            { 
+                m_Record.PurchaseTimeUtc = DateTime.Today.Add(Time).ToUniversalTime();
+            }
 
-            //Save sync item
-            //Sync with server
-            await CurrentApp.MainViewModel.ServiceApi.NewRecord(m_Shout);
-            
-            //await _navigationService.NavigateAsync("SummaryPage");
+            await CurrentApp.MainViewModel.ServiceApi.NewRecord(m_Record);
             await m_NavigationService.GoBackAsync();
         }
 
@@ -166,8 +184,8 @@ namespace NXT.ViewModels
         public async void OnEditGroupCommand()
         {
             NavigationParameters nav = new NavigationParameters();
-            nav.Add("group", m_ShoutGroup);
-            nav.Add("shout", m_Shout);
+            nav.Add("group", m_Group);
+            nav.Add("shout", m_Record);
             nav.Add("edit", true);
             await _navigationService.NavigateAsync("GroupPage", nav);
         }
@@ -175,8 +193,14 @@ namespace NXT.ViewModels
         public async void OnHistoryCommand()
         {
             NavigationParameters nav = new NavigationParameters();
-            nav.Add("group", m_ShoutGroup);
+            nav.Add("group", m_Group);
             await _navigationService.NavigateAsync("HistoryPage", nav);
+        }
+
+        public void OnShowTimeCommand()
+        {
+            ShowTime = !ShowTime;
+            RaisePropertyChanged(nameof(ShowTime));
         }
 
         public override void OnNavigatedFrom(NavigationParameters parameters)
@@ -191,23 +215,23 @@ namespace NXT.ViewModels
 
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
-            m_Shout = (RecordDto)parameters["model"];
+            m_Record = (RecordDto)parameters["model"];
             RaisePropertyChanged(nameof(GroupID));
             RaisePropertyChanged(nameof(ID));
-            RaisePropertyChanged(nameof(ShoutTitle));
+            RaisePropertyChanged(nameof(RecordTitle));
             RaisePropertyChanged(nameof(Cost));
 
-            m_ShoutGroup = (GroupDto)parameters["group"];
+            m_Group = (GroupDto)parameters["group"];
             RaisePropertyChanged(nameof(TrackCost));
 
-            foreach (var u in m_ShoutGroup.Users)
+            foreach (var u in m_Group.Users)
             {
                 UsersForRecord.Add(u);
             }
 
-            if(m_Shout.UserID != Guid.Empty)
+            if(m_Record.UserID != Guid.Empty)
             {
-                SelectedIndex = UsersForRecord.IndexOf(UsersForRecord.FirstOrDefault(x => x.ID == m_Shout.UserID));
+                SelectedIndex = UsersForRecord.IndexOf(UsersForRecord.FirstOrDefault(x => x.ID == m_Record.UserID));
             }
 
             RaisePropertyChanged("UserName");

@@ -29,7 +29,7 @@ namespace NXT.ViewModels
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand ClickIcon { get; }
         public DelegateCommand ClickExtrasCommand { get; }
-        public DelegateCommand<int?> RemoveUserCommand { get; }
+        public DelegateCommand LeaveGroupCommand { get; }
         public DelegateCommand<int?> UserClickedCommand { get; }
         public Command<object> ClickIconCommand { get; }
         public bool ShowIcons { get; set; }
@@ -52,7 +52,7 @@ namespace NXT.ViewModels
             {
                 m_GroupName = value;
                 RaisePropertyChanged(nameof(GroupName));
-                RaisePropertyChanged(nameof(CanSubmit));
+                CheckSubmit();
             }
         }
 
@@ -99,6 +99,14 @@ namespace NXT.ViewModels
             }
         }
 
+        public bool ShowLeaveGroup
+        {
+            get
+            {
+                return IsEdit && ShowExtras;
+            }
+        }
+
         #endregion
 
         public void CheckSubmit()
@@ -116,9 +124,15 @@ namespace NXT.ViewModels
             ClickExtrasCommand = new DelegateCommand(OnClickExtrasCommand);
             ClickIconCommand = new Command<object>(OnClickIconCommand);
             ClickIcon = new DelegateCommand(OnClickIcon);
-            RemoveUserCommand = new DelegateCommand<int?>(OnRemoveUserCommand);
+            LeaveGroupCommand = new DelegateCommand(OnLeaveGroupCommand);
             UserClickedCommand = new DelegateCommand<int?>(OnUserClickedCommand);
             Icons = new ObservableCollection<FileImageSource>(CurrentApp.MainViewModel.Icons);
+            UsersInGroup.CollectionChanged += UsersInGroup_CollectionChanged;
+        }
+
+        private void UsersInGroup_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            CheckSubmit();
         }
 
         public void OnAddUserToGroupCommand()
@@ -185,20 +199,12 @@ namespace NXT.ViewModels
 
         private bool CreateCommandCanExecute()
         {
-            if (String.IsNullOrEmpty(GroupName))
+            if (UsersInGroup.FirstOrDefault(x => x.ID != DummyGuid && x.ID != Settings.Current.UserGuid) != null &&
+                !String.IsNullOrEmpty(GroupName))
             {
-                return false;
+                return true;
             }
-
-            foreach (var u in UsersInGroup)
-            {
-                if (String.IsNullOrEmpty(u.Email) || String.IsNullOrEmpty(u.UserName))
-                {
-                    return false;
-                }
-            }
-            
-            return true;
+            return false;
         }
 
         public void OnCancelCommand()
@@ -219,17 +225,9 @@ namespace NXT.ViewModels
             RaisePropertyChanged(nameof(ShowIcons));
         }
 
-        public void OnRemoveUserCommand(int? index)
-        {
-            if (index.HasValue)
-            {
-                UsersInGroup.RemoveAt(index.Value);
-            }
-        }
-
         public async void OnUserClickedCommand(int? index)
         {
-            if (index.HasValue)
+            if (!IsEdit && index.HasValue)
             {
                 if (index == 0)
                 {
@@ -242,7 +240,15 @@ namespace NXT.ViewModels
                 }
                 else
                 {
-                    UsersInGroup.RemoveAt(index.Value);
+                    var newCollection = new ObservableCollection<UserDto>(UsersInGroup);
+                    newCollection.RemoveAt(index.Value);
+
+                    //Terrible
+                    UsersInGroup.Clear();
+                    foreach (var u in newCollection)
+                    {
+                        UsersInGroup.Add(u);
+                    }
                 }
             }
         }
@@ -251,6 +257,13 @@ namespace NXT.ViewModels
         {
             ShowExtras = !ShowExtras;
             RaisePropertyChanged(nameof(ShowExtras));
+            RaisePropertyChanged(nameof(ShowLeaveGroup));
+        }
+
+        public async void OnLeaveGroupCommand()
+        {
+            await CurrentApp.MainViewModel.ServiceApi.LeaveGroup(this.Group.ID.ToString(), Settings.Current.UserGuid.ToString());
+            await _navigationService.NavigateAsync("SummaryPage");
         }
 
         #region navigation
@@ -280,14 +293,17 @@ namespace NXT.ViewModels
             if (parameters.GetNavigationMode() == NavigationMode.Back)
             {
                 var user = (UserDto)parameters["user"];
-                var newCollection = new ObservableCollection<UserDto>(UsersInGroup);
-                newCollection.Insert(UsersInGroup.Count - 1, user);
-
-                //Terrible
-                UsersInGroup.Clear();
-                foreach (var u in newCollection)
+                if (user != null)
                 {
-                    UsersInGroup.Add(u);
+                    var newCollection = new ObservableCollection<UserDto>(UsersInGroup);
+                    newCollection.Insert(UsersInGroup.Count - 1, user);
+
+                    //Terrible
+                    UsersInGroup.Clear();
+                    foreach (var u in newCollection)
+                    {
+                        UsersInGroup.Add(u);
+                    }
                 }
             }
             else
@@ -303,25 +319,9 @@ namespace NXT.ViewModels
                     UsersInGroup.Clear();
                     UsersInGroup = new ObservableCollection<UserDto>(Group.Users);
                     RaisePropertyChanged(nameof(UsersInGroup));
-                    //foreach (var u in Group.Users)
-                    //{
-                    //    UsersInGroup.Add(u);
-                    //}
-
-                    //if (CurrentApp.MainViewModel.GroupColourDictionary.ContainsKey(Group.ID))
-                    //{
-                    //    SelectedColour = CurrentApp.MainViewModel.GroupColourDictionary[Group.ID];
-                    //}
                 }
                 else
                 {
-                    //Group = new GroupDto()
-                    //{
-                    //    ID = Guid.NewGuid(),
-                    //    Name = GroupName,
-                    //    TrackCost = TrackCost,
-                    //    Users = UsersInGroup.ToList()
-                    //};
                     UsersInGroup.Add(Settings.Current.User);
 
                     UserDto u = new UserDto();
@@ -341,10 +341,7 @@ namespace NXT.ViewModels
                     RaisePropertyChanged(nameof(IsEdit));
                 }
             }
-
         }
-
         #endregion
-
     }
 }

@@ -34,6 +34,7 @@ namespace NXT.ViewModels
             var token = FbAccessToken.Current;
             if (token != null)
             {
+                IsLoggingIn = true;
                 System.Diagnostics.Debug.WriteLine("Token available");
                 AlreadyLoggedIn(token);
             }
@@ -67,6 +68,7 @@ namespace NXT.ViewModels
 
         private async void OnOAuthCommandExecuted()
         {
+            IsLoggingIn = true;
             bool res = await m_AuthenticationService.SocialLoginFacebook();
             if (res)
             {
@@ -132,6 +134,7 @@ namespace NXT.ViewModels
 
         public void OnAuthError(object sender, AuthenticatorErrorEventArgs e)
         {
+            IsLoggingIn = false;
             var authenticator = sender as OAuth2Authenticator;
 
             if (authenticator != null)
