@@ -13,7 +13,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <helper:IconIndexConverter x:Key="IconIndexConverter"/>
-            <helper:InveseBooleanConverter x:Key="InveseBooleanConverter"/>
+            <helper:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <helper:AvatarConverter x:Key="AvatarConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -40,7 +40,7 @@
                                            BackgroundColor="Transparent" 
                                            BorderColor="Transparent" 
                                            Command="{Binding AddUserToGroupCommand}"
-                                           IsVisible="{Binding IsEdit, Converter={StaticResource InveseBooleanConverter}}"/>-->
+                                           IsVisible="{Binding IsEdit, Converter={StaticResource InverseBooleanConverter}}"/>-->
 
                 <Grid IsVisible="{Binding ShowExtras}">
                     <Grid.ColumnDefinitions>

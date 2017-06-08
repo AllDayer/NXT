@@ -30,7 +30,6 @@ namespace NXT.ViewModels
         {
             Title = "History";
             m_NavigationService = navigationService;
-
         }
 
         public override void OnNavigatedFrom(NavigationParameters parameters)

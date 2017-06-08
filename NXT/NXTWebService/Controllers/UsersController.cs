@@ -23,6 +23,23 @@ namespace NXTWebService.Controllers
             return db.NXTUsers;
         }
 
+        // GET: api/User
+        [Route("api/users/{userId}/friends")]
+        public IList<UserDto> GetFriends(Guid userId)
+        {
+            var friends = (from nxtGroup in db.Groups
+                           from u in nxtGroup.Users
+                           where nxtGroup.Users.Any(u => u.ID == userId) && u.ID != userId
+                           select new UserDto
+                           {
+                               ID = u.ID,
+                               AvatarUrl = u.AvatarUrl,
+                               UserName = u.UserName
+                           }).Distinct().ToList();
+
+            return friends;
+        }
+
         // GET: api/Users/5
         [ResponseType(typeof(UserDto))]
         public IHttpActionResult GetUser(Guid id)

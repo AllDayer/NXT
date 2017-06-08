@@ -21,16 +21,16 @@
         </Grid.Resources>-->
     <ContentPage.Resources>
         <ResourceDictionary>
-            <helper:InveseBooleanConverter x:Key="InveseBooleanConverter"/>
+            <helper:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
     <AbsoluteLayout>
         <StackLayout Spacing="30" 
                      AbsoluteLayout.LayoutBounds=".5,.25" AbsoluteLayout.LayoutFlags="PositionProportional">
             <Label Text="NXT" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
-            
-            <Label Text="Continue with:" FontSize="Small" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InveseBooleanConverter}}"/>
-            <control:CustomImageButton Image="facebooklogin"  x:Name="OAuth" Command="{Binding OAuthCommand}" BackgroundColor="Transparent" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InveseBooleanConverter}}"/>
+
+            <Label Text="Continue with:" FontSize="Small" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}"/>
+            <control:CustomImageButton Image="facebooklogin"  x:Name="OAuth" Command="{Binding OAuthCommand}" BackgroundColor="Transparent" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}"/>
             <ActivityIndicator Color="Red" IsRunning="true" IsVisible="{Binding IsLoggingIn}"/>
             <Label Text="Logging you in!" Font="Large" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsLoggingIn}"/>
         </StackLayout>

@@ -1,10 +1,14 @@
 ﻿using NXTWebService.Models;
+using Plugin.Contacts;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace NXT.ViewModels
 {
@@ -15,9 +19,25 @@ namespace NXT.ViewModels
 
         public DelegateCommand SaveCommand { get; }
         public DelegateCommand CancelCommand { get; }
+        public DelegateCommand OpenPopupCommand { get; }
+        public DelegateCommand OpenContactsCommand { get; }
 
         public UserDto NewUserForGroup { get; set; }
-
+        public List<UserDto> Friends { get; set; }
+        public List<UserDto> ContactsByEmail { get; set; }
+        private bool m_RunActivity = false;
+        public bool RunActivity
+        {
+            get
+            {
+                return m_RunActivity;
+            }
+            set
+            {
+                m_RunActivity = value;
+                RaisePropertyChanged(nameof(RunActivity));
+            }
+        }
         #endregion
 
         public AddUserToGroupPageViewModel(INavigationService navigationService) : base(navigationService)
@@ -26,6 +46,70 @@ namespace NXT.ViewModels
             NewUserForGroup = new UserDto();
             CancelCommand = new DelegateCommand(OnCancelCommand);
             SaveCommand = new DelegateCommand(OnSaveCommand);
+            OpenPopupCommand = new DelegateCommand(OnOpenPopupCommand);
+            OpenContactsCommand = new DelegateCommand(OnOpenContactsCommand);
+        }
+
+        private async void OnOpenPopupCommand()
+        {
+            var page = new Views.PopupAddUser();
+
+            page.CallbackEvent += Page_CallbackEvent;
+
+            await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PushAsync(page);
+        }
+
+        private async void OnOpenContactsCommand()
+        {
+            if (await CrossContacts.Current.RequestPermission())
+            {
+                RunActivity = true;
+
+                CrossContacts.Current.PreferContactAggregation = false;//recommended
+                                                                       //run in background
+                await Task.Run(() =>
+                {
+                    if (CrossContacts.Current.Contacts == null)
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            RunActivity = false;
+                            return;
+                        });
+                    }
+
+                    var myContacts = CrossContacts.Current.Contacts.ToList()
+                      .Where(c => !string.IsNullOrWhiteSpace(c.LastName) && c.Emails.Count > 0);
+
+                    List<UserDto> ContactsByEmail = new List<UserDto>();
+                    foreach(var contact in myContacts)
+                    {
+                        foreach(var email in contact.Emails)
+                        {
+                            ContactsByEmail.Add(new UserDto() { UserName = contact.DisplayName, Email = email.Address });
+                        }
+                    }
+
+                    Friends = ContactsByEmail;
+
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        RaisePropertyChanged(nameof(Friends));
+                        RunActivity = false;
+                    });
+                });
+
+            }
+        }
+
+        private void Page_CallbackEvent(object sender, UserDto e)
+        {
+            if (e != null && e.UserName.Length > 0)
+            {
+                this.NewUserForGroup = e;
+                Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync(true);
+                OnSaveCommand();
+            }
         }
 
         private async void OnCancelCommand()
@@ -48,12 +132,16 @@ namespace NXT.ViewModels
 
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
-
+            if (parameters["friends"] != null)
+            {
+                Friends = new List<UserDto>((IEnumerable<UserDto>)parameters["friends"]);
+                RaisePropertyChanged(nameof(Friends));
+            }
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
-            
+
         }
         #endregion
     }

@@ -160,6 +160,20 @@ namespace NXT.Services
             return true;
         }
 
+        public async Task<IEnumerable<UserDto>> GetFriends(Guid userId)
+        {
+            try
+            {
+                var response = await client.GetAsync("api/users/" + userId + "/friends");
+                response.EnsureSuccessStatusCode();
+                return await ReadAsAsync<IEnumerable<UserDto>>(response.Content);
+            }
+            catch(Exception)
+            {
+                return null;
+            }
+        }
+
         public async Task CreateGroupCommand(GroupDto group)
         {
             try

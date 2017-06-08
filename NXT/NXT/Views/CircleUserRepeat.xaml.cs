@@ -41,7 +41,7 @@ namespace NXT.Views
             };
             circle.GestureRecognizers.Add(tapGestureRecognizer);
             //this.Remove.Clicked += Remove_Clicked;
-            //this.Remove.SetBinding(IsVisibleProperty, new Binding("IsEdit", BindingMode.Default, new InveseBooleanConverter(), null, null, ShoutGroupVM));
+            //this.Remove.SetBinding(IsVisibleProperty, new Binding("IsEdit", BindingMode.Default, new InverseBooleanConverter(), null, null, ShoutGroupVM));
         }
     }
 }

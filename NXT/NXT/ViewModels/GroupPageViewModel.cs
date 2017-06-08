@@ -24,6 +24,8 @@ namespace NXT.ViewModels
 
         Guid DummyGuid = new Guid("99999999-9999-9999-9999-999999999999");
 
+        IEnumerable<UserDto> Friends { get; set; }
+
         public DelegateCommand CreateGroupCommand { get; }
         public DelegateCommand AddUserToGroupCommand { get; }
         public DelegateCommand CancelCommand { get; }
@@ -40,6 +42,7 @@ namespace NXT.ViewModels
         public bool IsEdit { get; set; } = false;
         public ObservableCollection<FileImageSource> Icons { get; set; }
         public bool ShowExtras { get; set; }
+
 
         private String m_GroupName = "";
         public String GroupName
@@ -128,6 +131,17 @@ namespace NXT.ViewModels
             UserClickedCommand = new DelegateCommand<int?>(OnUserClickedCommand);
             Icons = new ObservableCollection<FileImageSource>(CurrentApp.MainViewModel.Icons);
             UsersInGroup.CollectionChanged += UsersInGroup_CollectionChanged;
+            GetFriends();
+        }
+
+
+        private void GetFriends()
+        {
+            //Should be elsewhere
+            Task.Run(async () =>
+            {
+                Friends = await CurrentApp.MainViewModel.ServiceApi.GetFriends(Settings.Current.UserGuid);
+            });
         }
 
         private void UsersInGroup_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -236,7 +250,9 @@ namespace NXT.ViewModels
                 else if (index == UsersInGroup.Count - 1)
                 {
                     //Push to page
-                    await _navigationService.NavigateAsync("AddUserToGroupPage");
+                    NavigationParameters nav = new NavigationParameters();
+                    nav.Add("friends", Friends);
+                    await _navigationService.NavigateAsync("AddUserToGroupPage", nav);
                 }
                 else
                 {
@@ -263,7 +279,7 @@ namespace NXT.ViewModels
         public async void OnLeaveGroupCommand()
         {
             await CurrentApp.MainViewModel.ServiceApi.LeaveGroup(this.Group.ID.ToString(), Settings.Current.UserGuid.ToString());
-            await _navigationService.NavigateAsync("SummaryPage");
+            await _navigationService.NavigateAsync("/SummaryPage");
         }
 
         #region navigation
