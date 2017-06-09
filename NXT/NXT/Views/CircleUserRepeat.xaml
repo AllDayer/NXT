@@ -23,7 +23,7 @@
                             HorizontalOptions="Center"
                             Source="{Binding AvatarUrl, Converter={StaticResource AvatarConverter}}"
                             />
-            <Label Text="{Binding UserName}" HorizontalOptions="CenterAndExpand" WidthRequest="50"/>
+            <Label Text="{Binding UserName}" HorizontalOptions="CenterAndExpand" WidthRequest="100" LineBreakMode="TailTruncation" XAlign="Center" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>

@@ -170,7 +170,9 @@ namespace NXT.ViewModels
             }
 
             await CurrentApp.MainViewModel.ServiceApi.NewRecord(m_Record);
-            await m_NavigationService.GoBackAsync();
+            NavigationParameters nav = new NavigationParameters();
+            nav.Add("refresh", 1);
+            await m_NavigationService.GoBackAsync(nav);
         }
 
         public async void OnCancelCommand()
@@ -178,7 +180,6 @@ namespace NXT.ViewModels
             //Are you sure
             //await _navigationService.NavigateAsync("SummaryPage");
             await m_NavigationService.GoBackAsync();
-
         }
 
         public async void OnEditGroupCommand()

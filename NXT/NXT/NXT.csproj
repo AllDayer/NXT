@@ -76,6 +76,7 @@
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\GroupPageViewModel.cs" />
+    <Compile Include="ViewModels\PopIconPageViewModel.cs" />
     <Compile Include="ViewModels\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\SummaryPageViewModel.cs" />
     <Compile Include="Views\AddUserToGroupPage.xaml.cs">
@@ -90,6 +91,9 @@
     <Compile Include="Views\BuyPage.xaml.cs">
       <DependentUpon>BuyPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PopupIconPage.xaml.cs">
+      <DependentUpon>PopupIconPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PopupAddUser.xaml.cs">
       <DependentUpon>PopupAddUser.xaml</DependentUpon>
     </Compile>
@@ -100,9 +104,6 @@
       <DependentUpon>GroupPage.xaml</DependentUpon>
     </Compile>
     <!--<Compile Include="Views\ShoutSummaryGroupCard.cs" />-->
-    <Compile Include="Views\AddUserToGroupCard.xaml.cs">
-      <DependentUpon>AddUserToGroupCard.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>
@@ -160,12 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\SummaryGroupCard.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Views\AddUserToGroupCard.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -243,6 +238,10 @@
       <HintPath>..\..\packages\Prism.Forms.6.3.0\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Prism.Forms.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Prism.Plugin.Popups.DryIoc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Prism.Plugin.Popups.DryIoc.2.0.0-pre1\lib\portable45-net45+win8+wp8+wpa81\Prism.Plugin.Popups.DryIoc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Refractored.XamForms.PullToRefresh, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Refractored.XamForms.PullToRefresh.1.1.0\lib\portable-net45+wp80+win8+wpa81\Refractored.XamForms.PullToRefresh.dll</HintPath>
       <Private>True</Private>
@@ -299,6 +298,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\PopupAddUser.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\PopupIconPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

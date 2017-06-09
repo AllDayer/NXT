@@ -27,7 +27,7 @@ namespace NXT.ViewModels
         IEnumerable<UserDto> Friends { get; set; }
 
         public DelegateCommand CreateGroupCommand { get; }
-        public DelegateCommand AddUserToGroupCommand { get; }
+        //public DelegateCommand AddUserToGroupCommand { get; }
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand ClickIcon { get; }
         public DelegateCommand ClickExtrasCommand { get; }
@@ -119,10 +119,11 @@ namespace NXT.ViewModels
 
         public GroupPageViewModel(INavigationService navigationService, IEventAggregator eventAggregator) : base(navigationService)
         {
+            Title = "Create Group";
             m_NavigationService = navigationService;
             m_EventAggregator = eventAggregator;
             CreateGroupCommand = new DelegateCommand(OnCreateGroupCommand, CreateCommandCanExecute).ObservesProperty(() => CanSubmit);
-            AddUserToGroupCommand = new DelegateCommand(OnAddUserToGroupCommand);
+            //AddUserToGroupCommand = new DelegateCommand(OnAddUserToGroupCommand);
             CancelCommand = new DelegateCommand(OnCancelCommand);
             ClickExtrasCommand = new DelegateCommand(OnClickExtrasCommand);
             ClickIconCommand = new Command<object>(OnClickIconCommand);
@@ -149,11 +150,11 @@ namespace NXT.ViewModels
             CheckSubmit();
         }
 
-        public void OnAddUserToGroupCommand()
-        {
-            UsersInGroup.Add(new UserDto());
-            RaisePropertyChanged(nameof(UsersInGroup));
-        }
+        //public void OnAddUserToGroupCommand()
+        //{
+        //    UsersInGroup.Add(new UserDto());
+        //    RaisePropertyChanged(nameof(UsersInGroup));
+        //}
 
         public async void OnCreateGroupCommand()
         {
@@ -163,24 +164,13 @@ namespace NXT.ViewModels
 
             if (IsEdit)
             {
-                //if (CurrentApp.MainViewModel.GroupColourDictionary.ContainsKey(Group.ID))
-                //{
-                //    CurrentApp.MainViewModel.GroupColourDictionary[Group.ID] = SelectedColour;
-                //}
-                //else
-                //{
-                //    CurrentApp.MainViewModel.GroupColourDictionary.Add(Group.ID, SelectedColour);
-                //}
-
-                //await CurrentApp.MainViewModel.SaveGroupColours();
-
                 Group.Name = GroupName;
                 Group.Users = UsersInGroup.ToList();
                 Group.TrackCost = TrackCost;
                 Group.GroupIconIndex = SelectedIconIndex;
                 await CurrentApp.MainViewModel.ServiceApi.PutGroup(Group);
 
-                OnGoBack();
+                OnGoBack(true);
             }
             else
             {
@@ -200,14 +190,14 @@ namespace NXT.ViewModels
                     CurrentApp.MainViewModel.GroupColourDictionary = new Dictionary<Guid, string>();
                 }
                 //CurrentApp.MainViewModel.GroupColourDictionary.Add(Group.ID, SelectedColour);
-                await CurrentApp.MainViewModel.SaveGroupColours();
+                //await CurrentApp.MainViewModel.SaveGroupColours();
 
                 var groups = await CurrentApp.MainViewModel.ServiceApi.GetGroups(Settings.Current.UserGuid.ToString());
                 nav.Add("model", groups);
-                await _navigationService.NavigateAsync("/NavigationPage/SummaryPage", nav);
+                await _navigationService.NavigateAsync("/NavigationPage/SummaryPage?refresh=1", nav);
             }
 
-            await CurrentApp.MainViewModel.SaveGroupColours();
+            //await CurrentApp.MainViewModel.SaveGroupColours();
         }
 
 
@@ -224,7 +214,7 @@ namespace NXT.ViewModels
         public void OnCancelCommand()
         {
             //Show Dialog
-            OnGoBack();
+            OnGoBack(false);
         }
 
         void OnClickIconCommand(object s)
@@ -233,11 +223,33 @@ namespace NXT.ViewModels
             OnClickIcon();
         }
 
-        public void OnClickIcon()
+        public async void OnClickIcon()
         {
-            ShowIcons = !ShowIcons;
-            RaisePropertyChanged(nameof(ShowIcons));
+            var page = new Views.PopupAddUser();
+
+            //page.CallbackEvent += PageIcon_CallbackEvent;
+
+ //           await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PushAsync(page);
+
+            //await _navigationService.PopupGoBackAsync(new NavigationParameters { { NavigationParams.NavContextPopupFav, fav } }, false);
+            NavigationParameters nav = new NavigationParameters();
+            nav.Add("vm", this);
+            //await _navigationService.PushPopupPageAsync("PopupIcon", nav);
+            await _navigationService.NavigateAsync("PopupIconPage", nav, true);
+
+            //ShowIcons = !ShowIcons;
+            //RaisePropertyChanged(nameof(ShowIcons));
         }
+
+        //private void Page_CallbackEvent(object sender, int e)
+        //{
+        //    if (e != null && e.UserName.Length > 0)
+        //    {
+        //        this.NewUserForGroup = e;
+        //        Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync(true);
+        //        OnSaveCommand();
+        //    }
+        //}
 
         public async void OnUserClickedCommand(int? index)
         {
@@ -279,17 +291,32 @@ namespace NXT.ViewModels
         public async void OnLeaveGroupCommand()
         {
             await CurrentApp.MainViewModel.ServiceApi.LeaveGroup(this.Group.ID.ToString(), Settings.Current.UserGuid.ToString());
-            await _navigationService.NavigateAsync("/SummaryPage");
+
+            await _navigationService.NavigateAsync("/NavigationPage/SummaryPage?refresh=1");
+        }
+
+        private bool IsUserInGroup(UserDto user)
+        {
+            if (UsersInGroup.Contains(user))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         #region navigation
-        private async void OnGoBack()
+        private async void OnGoBack(bool refresh)
         {
             if (Group != null)
             {
                 NavigationParameters nav = new NavigationParameters();
                 nav.Add("group", Group);
                 nav.Add("model", ShoutFromEdit);
+                if (refresh)
+                {
+                    nav.Add("refresh", 1);
+                }
                 bool result = await _navigationService.GoBackAsync(nav);
             }
         }
@@ -306,19 +333,22 @@ namespace NXT.ViewModels
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.GetNavigationMode() == NavigationMode.Back)
+            if (parameters["user"] != null)
             {
                 var user = (UserDto)parameters["user"];
                 if (user != null)
                 {
-                    var newCollection = new ObservableCollection<UserDto>(UsersInGroup);
-                    newCollection.Insert(UsersInGroup.Count - 1, user);
-
-                    //Terrible
-                    UsersInGroup.Clear();
-                    foreach (var u in newCollection)
+                    if (!IsUserInGroup(user))
                     {
-                        UsersInGroup.Add(u);
+                        var newCollection = new ObservableCollection<UserDto>(UsersInGroup);
+                        newCollection.Insert(UsersInGroup.Count - 1, user);
+
+                        //Terrible
+                        UsersInGroup.Clear();
+                        foreach (var u in newCollection)
+                        {
+                            UsersInGroup.Add(u);
+                        }
                     }
                 }
             }
@@ -354,8 +384,10 @@ namespace NXT.ViewModels
                 if (parameters["edit"] != null)
                 {
                     IsEdit = true;
+                    Title = "Edit Group";
                     RaisePropertyChanged(nameof(IsEdit));
                 }
+
             }
         }
         #endregion

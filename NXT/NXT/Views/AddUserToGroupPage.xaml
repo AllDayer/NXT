@@ -22,7 +22,7 @@
 
         <Label Text="Existing"/>
         <ActivityIndicator Color="Red" IsRunning="true" IsVisible="{Binding RunActivity}"/>
-        <ListView x:Name="friends" ItemsSource="{Binding Friends}"  RowHeight="55"  VerticalOptions="StartAndExpand" CachingStrategy="RecycleElement">
+        <ListView x:Name="friends" ItemsSource="{Binding Friends}" RowHeight="55" VerticalOptions="StartAndExpand" CachingStrategy="RecycleElement">
             <!--IsVisible="{Binding RunActivity, Converter={StaticResource InverseBooleanConverter}}"-->
             <ListView.ItemTemplate>
                 <DataTemplate>

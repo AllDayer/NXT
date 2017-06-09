@@ -6,9 +6,10 @@
              xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
              xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
              xmlns:circle="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             Title="{Binding Title}"
              x:Class="NXT.Views.GroupPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" />
+        <!--<ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" />-->
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -17,7 +18,7 @@
             <helper:AvatarConverter x:Key="AvatarConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <StackLayout Margin="5" Spacing="10" VerticalOptions="StartAndExpand">
+    <StackLayout Margin="20" Spacing="10" VerticalOptions="FillAndExpand">
         <Label Text="What's NXT??" FontSize="Medium" TextColor="White"/>
 
         <Entry Placeholder="Name" Text="{Binding GroupName}"/>
@@ -30,18 +31,7 @@
 
         <control:CustomImageButton Text="Options" Command="{Binding ClickExtrasCommand}" BackgroundColor="Transparent" HorizontalOptions="End"/>
         <ScrollView HorizontalOptions="EndAndExpand" VerticalOptions="StartAndExpand">
-            <!--<control:CardView>-->
             <StackLayout Margin="5" VerticalOptions="StartAndExpand" >
-
-                <!--<Label Text="Who is joining in?"/>-->
-                <!--<control:UserRepeaterView x:Name="repeater" ItemsSource="{Binding UsersInGroup}"  />-->
-
-                <!--<control:CustomImageButton Image="ic_account_plus_white_48dp.png" 
-                                           BackgroundColor="Transparent" 
-                                           BorderColor="Transparent" 
-                                           Command="{Binding AddUserToGroupCommand}"
-                                           IsVisible="{Binding IsEdit, Converter={StaticResource InverseBooleanConverter}}"/>-->
-
                 <Grid IsVisible="{Binding ShowExtras}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1"/>
@@ -60,16 +50,6 @@
                     <Label Text="Track Cost?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="1"/>
                     <Switch x:Name="toggle" IsToggled="{Binding TrackCost}" Grid.Row="1" Grid.Column="2" 
                         HorizontalOptions="Center"/>
-
-                    <!--<Label Text="Favourite Colour?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="2" Grid.Column="1"/>
-                    <Button Text="" 
-                        Command="{Binding ClickColour}" 
-                        BackgroundColor="{Binding SelectedColour}"
-                        HeightRequest="50"  
-                        WidthRequest="50" 
-                        HorizontalOptions="Center"
-                        Grid.Row="2" Grid.Column="2"/>-->
-
                     
                     <Label Text="Icon?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="3" Grid.Column="1"/>
                     <control:CustomImageButton Text="" 
@@ -86,30 +66,19 @@
 
 
                 <StackLayout IsVisible="{Binding ShowExtras}">
-                    <control:GridListView 
-                        x:Name="GridIcons"
-                        HorizontalOptions="FillAndExpand"
-                        Grid.Row="1"
-                        VerticalOptions="FillAndExpand"
-                        RowSpacing="20"
-                        ColumnSpacing="20"
-                        MaxColumns="5"
-                        IsClippedToBounds="False"
-                        Command="{Binding ClickIconCommand}"
-                        CommandParameter="{Binding .}"
-                        ItemsSource="{Binding Icons}"
-                        />
+
                 </StackLayout>
                 
                 <!--<Picker ItemsSource="{Binding MyCountries}" SelectedIndex="{Binding SelectedIndex}"/>-->
-                <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">
-                    <Button x:Name="LeaveGroup" Text="Leave Group" IsVisible="{Binding ShowLeaveGroup}" BackgroundColor="#c62828" />
-                    <Button Text="Cancel" Command="{Binding CancelCommand}" BackgroundColor="#03A9F4" />
-                    <Button Text="Save" Command="{Binding CreateGroupCommand}" BackgroundColor="#03A9F4"/>
-                </StackLayout>
+
 
             </StackLayout>
             <!--</control:CardView>-->
         </ScrollView>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">
+            <Button x:Name="LeaveGroup" Text="Leave Group" IsVisible="{Binding ShowLeaveGroup}" BackgroundColor="#c62828" />
+            <Button Text="Cancel" Command="{Binding CancelCommand}" BackgroundColor="#03A9F4" />
+            <Button Text="Save" Command="{Binding CreateGroupCommand}" BackgroundColor="#03A9F4"/>
+        </StackLayout>
     </StackLayout>
 </ContentPage>

@@ -20,6 +20,7 @@ namespace NXT
 
         protected override void RegisterTypes()
         {
+            Container.RegisterPopupNavigationService();
             Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<LoginPage>();
@@ -27,7 +28,7 @@ namespace NXT
             Container.RegisterTypeForNavigation<BuyPage>();
             Container.RegisterTypeForNavigation<GroupPage>();
             Container.RegisterTypeForNavigation<HistoryPage>();
-
+            Container.RegisterTypeForNavigation<PopupIconPage>();
             Container.Register<IAuthenticationService, AuthenticationService>(Reuse.Singleton);
             Container.RegisterTypeForNavigation<ProfilePage>();
             Container.RegisterTypeForNavigation<AddUserToGroupPage>();

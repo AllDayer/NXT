@@ -12,23 +12,6 @@ using Xamarin.Forms;
 
 namespace NXT.Controls
 {
-    public class UserRepeaterView : RepeaterView<UserDto>
-    {
-        private List<BaseViewModel> m_ViewModels;
-
-        public UserRepeaterView()
-        {
-            this.HorizontalOptions = LayoutOptions.FillAndExpand;
-            this.VerticalOptions = LayoutOptions.Start;
-            m_ViewModels = new List<BaseViewModel>();
-        }
-
-        protected override View ViewFor(object vm, object parentVM, string bgColour, int i)
-        {
-            return new AddUserToGroupCard() { ShoutGroupVM = (GroupPageViewModel)parentVM, Index = i, BindingContext = vm  };
-        }
-    }
-
     public class UserCircleRepeaterView : RepeaterView<UserDto>
     {
         private List<BaseViewModel> m_ViewModels;

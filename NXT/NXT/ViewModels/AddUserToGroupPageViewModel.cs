@@ -120,6 +120,12 @@ namespace NXT.ViewModels
         private async void OnSaveCommand()
         {
             NavigationParameters nav = new NavigationParameters();
+
+            if(String.IsNullOrEmpty(NewUserForGroup.Colour))
+            {
+                NewUserForGroup.Colour = CurrentApp.MainViewModel.RandomColour();
+            }
+
             nav.Add("user", NewUserForGroup);
             await m_NavigationService.GoBackAsync(nav);
         }

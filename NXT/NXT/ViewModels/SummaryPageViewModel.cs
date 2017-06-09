@@ -71,7 +71,7 @@ namespace NXT.ViewModels
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.GetNavigationMode() == NavigationMode.Back)
+            if (parameters["refresh"] != null)//parameters.GetNavigationMode() == NavigationMode.Back || 
             {
                 OnRefreshCommand();
             }

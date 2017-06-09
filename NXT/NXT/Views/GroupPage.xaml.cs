@@ -35,8 +35,8 @@ namespace NXT.Views
                 ((GroupPageViewModel)BindingContext).PropertyChanged += GroupPage_PropertyChanged;
                 LeaveGroup.Clicked += LeaveGroup_Clicked;
             }
-            GridIcons.IsVisible = false;
-            GridIcons.Opacity = 0;
+            //GridIcons.IsVisible = false;
+            //GridIcons.Opacity = 0;
         }
 
         private async void LeaveGroup_Clicked(object sender, System.EventArgs e)
@@ -52,18 +52,18 @@ namespace NXT.Views
         {
             if (e.PropertyName == "ShowIcons")
             {
-                if (((GroupPageViewModel)sender).ShowIcons)
-                {
-                    GridIcons.IsVisible = true;
-                    GridIcons.FadeTo(1, 300, Easing.CubicIn);
-                }
-                else
-                {
-                    var animation = new Animation(v => GridIcons.Opacity = v, 1, 0);
-                    animation.Commit(this, "FadeColours", 16, 250, Easing.CubicOut, (v, c) => this.GridIcons.IsVisible = false);
-                    //GridColours.FadeTo(0, 300, Easing.CubicOut);
-                    //GridColours.IsVisible = false;
-                }
+                //if (((GroupPageViewModel)sender).ShowIcons)
+                //{
+                //    GridIcons.IsVisible = true;
+                //    GridIcons.FadeTo(1, 300, Easing.CubicIn);
+                //}
+                //else
+                //{
+                //    var animation = new Animation(v => GridIcons.Opacity = v, 1, 0);
+                //    animation.Commit(this, "FadeColours", 16, 250, Easing.CubicOut, (v, c) => this.GridIcons.IsVisible = false);
+                //    //GridColours.FadeTo(0, 300, Easing.CubicOut);
+                //    //GridColours.IsVisible = false;
+                //}
             }
         }
 

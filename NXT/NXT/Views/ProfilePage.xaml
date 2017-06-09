@@ -13,9 +13,6 @@
     </ContentPage.ToolbarItems>
 
     <StackLayout Margin="20" Spacing="15">
-        <Label Text="Profile" HorizontalOptions="Start" FontSize="Large" />
-
-
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -27,7 +24,7 @@
             </Grid.RowDefinitions>
 
             <Entry Placeholder="Name" Text="{Binding Name}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
-            <Label Text="Favourite Colour?" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="0"/>
+            <Label Text="Colour" VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="0"/>
             <Button Text="" 
                 Command="{Binding ClickColour}" 
                 BackgroundColor="{Binding SelectedColour}"

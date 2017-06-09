@@ -22,34 +22,34 @@ namespace NXTWebService.Controllers
         public IQueryable<GroupDto> GetGroups()
         {
             var groups = from s in db.Groups
-                              select new GroupDto()
-                              {
-                                  ID = s.ID,
-                                  Category = s.Category,
-                                  Name = s.Name,
-                                  TrackCost = s.TrackCost,
-                                  GroupIconIndex = s.GroupIcon.IconIndex,
-                                  Users = (from u in db.NXTUsers
-                                           where s.Users.Any(sh => sh.ID == u.ID)
-                                           select new UserDto()
-                                           {
-                                               UserName = u.UserName,
-                                               AvatarUrl = u.AvatarUrl,
-                                               ID = u.ID,
-                                               Colour = u.Colour
-                                           }).ToList(),
-                                  Records = (from record in db.Records
-                                            where s.Records.Any(sh => sh.ID == record.ID)
-                                            select new RecordDto()
-                                            {
-                                                Cost = record.Cost,
-                                                ID = record.ID,
-                                                PurchaseTimeUtc = record.PurchaseTimeUtc,
-                                                UserName = record.User.UserName,
-                                                GroupName = record.Group.Name
-                                            }).ToList()
+                         select new GroupDto()
+                         {
+                             ID = s.ID,
+                             Category = s.Category,
+                             Name = s.Name,
+                             TrackCost = s.TrackCost,
+                             GroupIconIndex = s.GroupIcon.IconIndex,
+                             Users = (from u in db.NXTUsers
+                                      where s.Users.Any(sh => sh.ID == u.ID)
+                                      select new UserDto()
+                                      {
+                                          UserName = u.UserName,
+                                          AvatarUrl = u.AvatarUrl,
+                                          ID = u.ID,
+                                          Colour = u.Colour
+                                      }).ToList(),
+                             Records = (from record in db.Records
+                                        where s.Records.Any(sh => sh.ID == record.ID)
+                                        select new RecordDto()
+                                        {
+                                            Cost = record.Cost,
+                                            ID = record.ID,
+                                            PurchaseTimeUtc = record.PurchaseTimeUtc,
+                                            UserName = record.User.UserName,
+                                            GroupName = record.Group.Name
+                                        }).ToList()
 
-                              };
+                         };
             return groups;
         }
 
@@ -57,41 +57,41 @@ namespace NXTWebService.Controllers
         public IQueryable<GroupDto> GetGroupForUser(Guid userId)
         {
             var groups = from s in db.Groups.Include(sgi => sgi.GroupIcon)
-                              from su in s.Users
-                              where su.ID == userId
-                              select new GroupDto()
-                              {
-                                  ID = s.ID,
-                                  Category = s.Category,
-                                  Name = s.Name,
-                                  TrackCost = s.TrackCost,
-                                  GroupIconIndex = s.GroupIcon.IconIndex,
-                                  Records = (from record in db.Records
-                                            where s.Records.Any(sh => sh.ID == record.ID)
-                                            orderby record.PurchaseTimeUtc descending
-                                            select new RecordDto()
-                                            {
-                                                Cost = record.Cost,
-                                                ID = record.ID,
-                                                PurchaseTimeUtc = record.PurchaseTimeUtc,
-                                                UserName = record.User.UserName,
-                                                GroupName = record.Group.Name,
-                                                UserAvatarUrl = record.User.AvatarUrl
-                                            }).ToList(),
-                                  Users = (from u in db.NXTUsers
-                                           where s.Users.Any(sh => sh.ID == u.ID)
-                                           select new UserDto()
-                                           {
-                                               UserName = u.UserName,
-                                               ID = u.ID,
-                                               AvatarUrl = u.AvatarUrl,
-                                               Colour = u.Colour,
-                                               RecordCount = (from zx in db.Records
-                                                             where zx.Group.ID == s.ID &&
-                                                                   zx.User.ID == u.ID
-                                                             select zx).Count()
-                                           }).ToList()
-                              };
+                         from su in s.Users
+                         where su.ID == userId
+                         select new GroupDto()
+                         {
+                             ID = s.ID,
+                             Category = s.Category,
+                             Name = s.Name,
+                             TrackCost = s.TrackCost,
+                             GroupIconIndex = s.GroupIcon.IconIndex,
+                             Records = (from record in db.Records
+                                        where s.Records.Any(sh => sh.ID == record.ID)
+                                        orderby record.PurchaseTimeUtc descending
+                                        select new RecordDto()
+                                        {
+                                            Cost = record.Cost,
+                                            ID = record.ID,
+                                            PurchaseTimeUtc = record.PurchaseTimeUtc,
+                                            UserName = record.User.UserName,
+                                            GroupName = record.Group.Name,
+                                            UserAvatarUrl = record.User.AvatarUrl
+                                        }).ToList(),
+                             Users = (from u in db.NXTUsers
+                                      where s.Users.Any(sh => sh.ID == u.ID)
+                                      select new UserDto()
+                                      {
+                                          UserName = u.UserName,
+                                          ID = u.ID,
+                                          AvatarUrl = u.AvatarUrl,
+                                          Colour = u.Colour,
+                                          RecordCount = (from zx in db.Records
+                                                         where zx.Group.ID == s.ID &&
+                                                               zx.User.ID == u.ID
+                                                         select zx).Count()
+                                      }).ToList()
+                         };
 
             return groups;
         }
@@ -102,40 +102,40 @@ namespace NXTWebService.Controllers
         public IHttpActionResult GetGroup(Guid id)
         {
             var group = from s in db.Groups.Include(sgi => sgi.GroupIcon)
-                             where s.ID == id
-                             select new GroupDto()
-                             {
-                                 ID = s.ID,
-                                 Category = s.Category,
-                                 Name = s.Name,
-                                 TrackCost = s.TrackCost,
-                                 GroupIconIndex = s.GroupIcon != null ? s.GroupIcon.IconIndex : -1,
-                                 Records = (from record in db.Records
-                                           where s.Records.Any(sh => sh.ID == record.ID)
-                                           orderby record.PurchaseTimeUtc descending
-                                           select new RecordDto()
-                                           {
-                                               Cost = record.Cost,
-                                               ID = record.ID,
-                                               PurchaseTimeUtc = record.PurchaseTimeUtc,
-                                               UserName = record.User.UserName,
-                                               GroupName = record.Group.Name,
-                                               UserAvatarUrl = record.User.AvatarUrl
-                                           }).ToList(),
-                                 Users = (from u in db.NXTUsers
-                                          where s.Users.Any(sh => sh.ID == u.ID)
-                                          select new UserDto()
-                                          {
-                                              UserName = u.UserName,
-                                              ID = u.ID,
-                                              AvatarUrl = u.AvatarUrl,
-                                              Colour = u.Colour,
-                                              RecordCount = (from zx in db.Records
-                                                            where zx.Group.ID == s.ID &&
-                                                                  zx.User.ID == u.ID
-                                                            select zx).Count()
-                                          }).ToList()
-                             };
+                        where s.ID == id
+                        select new GroupDto()
+                        {
+                            ID = s.ID,
+                            Category = s.Category,
+                            Name = s.Name,
+                            TrackCost = s.TrackCost,
+                            GroupIconIndex = s.GroupIcon != null ? s.GroupIcon.IconIndex : -1,
+                            Records = (from record in db.Records
+                                       where s.Records.Any(sh => sh.ID == record.ID)
+                                       orderby record.PurchaseTimeUtc descending
+                                       select new RecordDto()
+                                       {
+                                           Cost = record.Cost,
+                                           ID = record.ID,
+                                           PurchaseTimeUtc = record.PurchaseTimeUtc,
+                                           UserName = record.User.UserName,
+                                           GroupName = record.Group.Name,
+                                           UserAvatarUrl = record.User.AvatarUrl
+                                       }).ToList(),
+                            Users = (from u in db.NXTUsers
+                                     where s.Users.Any(sh => sh.ID == u.ID)
+                                     select new UserDto()
+                                     {
+                                         UserName = u.UserName,
+                                         ID = u.ID,
+                                         AvatarUrl = u.AvatarUrl,
+                                         Colour = u.Colour,
+                                         RecordCount = (from zx in db.Records
+                                                        where zx.Group.ID == s.ID &&
+                                                              zx.User.ID == u.ID
+                                                        select zx).Count()
+                                     }).ToList()
+                        };
             if (group == null)
             {
                 return NotFound();
@@ -266,17 +266,17 @@ namespace NXTWebService.Controllers
             db.Groups.Attach(group);
 
             var user = db.NXTUsers.FirstOrDefault(x => x.ID == UserId);
-            if(user != null)
+            if (user != null)
             {
                 group.Users.Remove(user);
-                if(group.Users.Count <= 1)
+                if (group.Users.Count <= 1)
                 {
                     db.Groups.Remove(group);
                     db.SaveChanges();
                     return Ok(group);
                 }
                 //TODO modify when adding new auth
-                else if(group.Users.Count > 1 && !group.Users.Any(x => x.FacebookID.Length > 0 || x.TwitterID.Length > 0))
+                else if (group.Users.Count > 1 && !group.Users.Any(x => x.FacebookID.Length > 0 || x.TwitterID.Length > 0))
                 {
                     db.Groups.Remove(group);
                     db.SaveChanges();
@@ -320,7 +320,7 @@ namespace NXTWebService.Controllers
                 Name = groupDto.Name,
                 TrackCost = groupDto.TrackCost,
                 Category = groupDto.Category,
-                Records= new List<Record>(),
+                Records = new List<Record>(),
                 Users = new List<User>()
             };
 
@@ -351,7 +351,7 @@ namespace NXTWebService.Controllers
                 }
                 else
                 {
-                    var newUser = new User() { ID = Guid.NewGuid(), Email = groupUser.Email, UserName = groupUser.UserName };
+                    var newUser = new User() { ID = Guid.NewGuid(), Email = groupUser.Email, UserName = groupUser.UserName, Colour = groupUser.Colour };
                     if (newUser.Groups == null)
                     {
                         newUser.Groups = new List<Group>();

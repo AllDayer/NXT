@@ -143,6 +143,10 @@
       <HintPath>..\..\packages\Prism.Forms.6.3.0\lib\MonoAndroid1.0\Prism.Forms.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Prism.Plugin.Popups.DryIoc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Prism.Plugin.Popups.DryIoc.2.0.0-pre1\lib\portable45-net45+win8+wp8+wpa81\Prism.Plugin.Popups.DryIoc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Refractored.XamForms.PullToRefresh, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Refractored.XamForms.PullToRefresh.1.1.0\lib\MonoAndroid10\Refractored.XamForms.PullToRefresh.dll</HintPath>
       <Private>True</Private>

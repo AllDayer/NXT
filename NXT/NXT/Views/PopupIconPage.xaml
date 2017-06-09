@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+             xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
+             xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+	           prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="NXT.Views.PopupIconPage">
+    <!--Animations use example-->
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation 
+      PositionIn="Center"
+      PositionOut="Center"
+      ScaleIn="1.2"
+      ScaleOut="0.8"
+      DurationIn="400"
+      DurationOut="300"
+      EasingIn="SinOut"
+      EasingOut="SinIn"
+      HasBackgroundAnimation="True"/>
+    </pages:PopupPage.Animation>
+    <ScrollView HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Margin="20,50">
+      <Frame BackgroundColor="Black" CornerRadius="10">
+      <control:GridListView
+                x:Name="GridIcons"
+                HorizontalOptions="FillAndExpand"
+                Grid.Row="1"
+                VerticalOptions="FillAndExpand"
+                RowSpacing="20"
+                ColumnSpacing="20"
+                MaxColumns="5"
+                IsClippedToBounds="False"
+                Command="{Binding ClickIconCommand}"
+                CommandParameter="{Binding .}"
+                ItemsSource="{Binding GroupVM.Icons}"
+                        />
+      </Frame>
+        
+    </ScrollView>
+</pages:PopupPage>
