@@ -26,7 +26,7 @@ namespace NXT.ViewModels
         public DelegateCommand ProfileCommand { get; }
         private UserDto User { get; set; } = null;
 
-        private bool m_NoGroups;
+        private bool m_NoGroups = true;
         public bool NoGroups
         {
             get { return m_NoGroups; }
@@ -47,6 +47,8 @@ namespace NXT.ViewModels
             }
         }
 
+        public LoginPageViewModel LoginVM { get; set; }
+
         public List<RecordDto> ShoutsForGroup { get; set; }
 
         public SummaryPageViewModel(INavigationService navigationService, IAuthenticationService authenticationService, IEventAggregator eventAggregator)
@@ -61,29 +63,6 @@ namespace NXT.ViewModels
             ProfileCommand = new DelegateCommand(OnProfileCommand);
         }
 
-        public override void OnNavigatingTo(NavigationParameters parameters)
-        {
-            base.OnNavigatingTo(parameters);
-            Task.Run(async () => { await LoadData(); });
-            m_EventAggregator.GetEvent<GroupsLoadedEvent>().Publish();
-        }
-
-        public override void OnNavigatedTo(NavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-            if (parameters["refresh"] != null)//parameters.GetNavigationMode() == NavigationMode.Back || 
-            {
-                OnRefreshCommand();
-            }
-            else
-            {
-                if (!String.IsNullOrEmpty(Settings.Current.SocialUserID))
-                {
-                    GetUser();
-                }
-            }
-        }
-        
         private async void GetUser()
         {
             User = await CurrentApp.MainViewModel.ServiceApi.GetUserBySocial(Settings.Current.SocialUserID);
@@ -119,8 +98,11 @@ namespace NXT.ViewModels
         public async Task RefreshGroups()
         {
             var groups = await CurrentApp.MainViewModel.ServiceApi.GetGroups(Settings.Current.UserGuid.ToString());
-            Settings.Current.Groups = new System.Collections.ObjectModel.ObservableCollection<GroupDto>(groups);
-            RaisePropertyChanged(nameof(Groups));
+            if (groups != null)
+            {
+                Settings.Current.Groups = new System.Collections.ObjectModel.ObservableCollection<GroupDto>(groups);
+                RaisePropertyChanged(nameof(Groups));
+            }
         }
 
         public async void OnRefreshCommand()
@@ -157,6 +139,52 @@ namespace NXT.ViewModels
             nav.Add("group", e.Group);
 
             await _navigationService.NavigateAsync("BuyPage", nav);
+        }
+
+        public override void OnNavigatingTo(NavigationParameters parameters)
+        {
+            base.OnNavigatingTo(parameters);
+            //Task.Run(async () => { await LoadData(); });
+            //m_EventAggregator.GetEvent<GroupsLoadedEvent>().Publish();
+        }
+
+        public async void Login()
+        {
+            if (!_authenticationService.IsLoggedIn())
+            {
+                NavigationParameters nav = new NavigationParameters();
+                nav.Add("vm", this);
+                //await _navigationService.NavigateAsync("/LoginPage", nav);
+                await _navigationService.PushPopupPageAsync("LoginPage", nav);
+            }
+        }
+
+        public void Load(bool refresh)
+        {
+            Task.Run(async () => { await LoadData(); });
+            if (refresh)//parameters.GetNavigationMode() == NavigationMode.Back || 
+            {
+                User = Settings.Current.User;
+                OnRefreshCommand();
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(Settings.Current.SocialUserID))
+                {
+                    GetUser();
+                    OnRefreshCommand();
+                }
+            }
+        }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+
+            if (_authenticationService.IsLoggedIn())
+            {
+                Load(parameters["refresh"] != null);
+            }
         }
     }
 }

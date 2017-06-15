@@ -13,7 +13,7 @@ namespace NXT.Views
         {
             InitializeComponent();
             _ea = eventAggregator;
-
+            GroupName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeSentence);
             //_ea.GetEvent<UserAddedToGroupEvent>().Subscribe(() => SetRepeater());
         }
 
@@ -21,22 +21,13 @@ namespace NXT.Views
         {
             repeater.ParentVM = BindingContext;
             base.OnBindingContextChanged();
-
-            //var tapGestureRecognizer = new TapGestureRecognizer
-            //{
-            //    Command = ((ShoutGroupPageViewModel)BindingContext).ClickCommand,
-            //    CommandParameter = "123",
-            //    NumberOfTapsRequired = 1,
-            //};
-
-            //Hello.GestureRecognizers.Add(tapGestureRecognizer);
             if (BindingContext != null)
             {
                 ((GroupPageViewModel)BindingContext).PropertyChanged += GroupPage_PropertyChanged;
                 LeaveGroup.Clicked += LeaveGroup_Clicked;
+                gridExtras.Opacity = 0;
+                gridExtras.TranslationX = -10;
             }
-            //GridIcons.IsVisible = false;
-            //GridIcons.Opacity = 0;
         }
 
         private async void LeaveGroup_Clicked(object sender, System.EventArgs e)
@@ -50,27 +41,22 @@ namespace NXT.Views
 
         private void GroupPage_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "ShowIcons")
+            if (e.PropertyName == "ShowExtras")
             {
-                //if (((GroupPageViewModel)sender).ShowIcons)
-                //{
-                //    GridIcons.IsVisible = true;
-                //    GridIcons.FadeTo(1, 300, Easing.CubicIn);
-                //}
-                //else
-                //{
-                //    var animation = new Animation(v => GridIcons.Opacity = v, 1, 0);
-                //    animation.Commit(this, "FadeColours", 16, 250, Easing.CubicOut, (v, c) => this.GridIcons.IsVisible = false);
-                //    //GridColours.FadeTo(0, 300, Easing.CubicOut);
-                //    //GridColours.IsVisible = false;
-                //}
-            }
-        }
+                if (((GroupPageViewModel)sender).ShowExtras)
+                {
+                    var translateLength = 400u;
+                    gridExtras.IsVisible = true;
 
-        private void SetRepeater()
-        {
-            //repeater.ParentVM = BindingContext;
-            //repeater.ItemsSource = ((ShoutGroupPageViewModel)BindingContext).UsersInGroup;
+                    gridExtras.FadeTo(1, 300, Easing.CubicIn);
+                    gridExtras.TranslateTo(0, 0, easing: Easing.SpringOut, length: translateLength);
+                }
+                else
+                {
+                    var animation = new Animation(v => gridExtras.Opacity = v, 1, 0);
+                    animation.Commit(this, "FadeExtras", 16, 250, Easing.CubicOut, (v, c) => this.gridExtras.IsVisible = false);
+                }
+            }
         }
 
         protected override void OnDisappearing()

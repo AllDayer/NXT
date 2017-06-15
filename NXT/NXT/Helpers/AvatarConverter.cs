@@ -9,7 +9,7 @@ namespace NXT.Helpers
         {
             if(value == null || (string)value == string.Empty)
             {
-                return "ic_account_circle_white_36dp.png";
+                return "";
             }
             return value;
         }

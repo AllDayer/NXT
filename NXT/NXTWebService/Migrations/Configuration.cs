@@ -79,7 +79,6 @@ namespace NXTWebService.Migrations
             GroupIcon icon = new GroupIcon()
             {
                 GroupID = group2.ID,
-                IconIndex = 0,
                 Group = group2
             };
 

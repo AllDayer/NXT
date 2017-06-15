@@ -1,4 +1,5 @@
 ﻿using NXTWebService.Models;
+using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -16,7 +17,18 @@ namespace NXT.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            absLayout.RaiseChild(CloseImage);
+            FrameContainer.HeightRequest = -1;
+            //absLayout.RaiseChild(CloseCV);
+
+            CloseImage.Rotation = 30;
+            CloseImage.Scale = 0.3;
+            CloseImage.Opacity = 0;
+
+            myGrid.TranslationX = -10;
+            myGrid.Opacity = 0;
+
+            AddButton.Scale = 0.3;
+            AddButton.Opacity = 0;
         }
 
         protected override void OnDisappearing()
@@ -26,16 +38,24 @@ namespace NXT.Views
 
         // Method for animation child in PopupPage
         // Invoced after custom animation end
-        protected virtual Task OnAppearingAnimationEnd()
+        protected async override Task OnAppearingAnimationEnd()
         {
-            return Content.FadeTo(0.5);
+            var translateLength = 400u;
+            await Task.WhenAll(
+                                myGrid.TranslateTo(0, 0, easing: Easing.SpringOut, length: translateLength),
+                                myGrid.FadeTo(1),
+                                CloseImage.FadeTo(1),
+                                CloseImage.ScaleTo(1, easing: Easing.SpringOut),
+                                CloseImage.RotateTo(0),
+                                AddButton.ScaleTo(1),
+                                AddButton.FadeTo(1));
         }
 
         // Method for animation child in PopupPage
         // Invoked before custom animation begin
-        protected virtual Task OnDisappearingAnimationBegin()
+        protected async override Task OnDisappearingAnimationBegin()
         {
-            return Content.FadeTo(1);
+            await Content.FadeTo(1);
         }
 
         protected override bool OnBackButtonPressed()
@@ -64,7 +84,7 @@ namespace NXT.Views
 
         private async void OnAdd(object sender, System.EventArgs e)
         {
-            if (name.Text.Length > 0)
+            if (!String.IsNullOrEmpty(name.Text))
             {
                 var user = new UserDto() { UserName = name.Text, Email = email.Text };
                 await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();

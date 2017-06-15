@@ -14,6 +14,17 @@ namespace NXTWebService.Models
         public AuthType AuthType { get; set; }
         public String AvatarUrl { get; set; }
         public String Colour { get; set; }
+        public String Initial
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(UserName))
+                {
+                    return UserName.Substring(0, 1);
+                }
+                return "";
+            }
+        }
 
         public override string ToString()
         {

@@ -12,7 +12,7 @@ namespace NXTWebService.Models
         public bool TrackCost { get; set; }
         public List<UserDto> Users { get; set; }
         public List<RecordDto> Records { get; set; }
-        public int GroupIconIndex { get; set; }
+        public string GroupIconName { get; set; }
 
         [Newtonsoft.Json.JsonIgnore]
         public string Colour { get; set; }

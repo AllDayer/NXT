@@ -16,7 +16,10 @@ namespace NXT.Models
         [Key, ForeignKey("Group")]
 #endif
         public Guid GroupID { get; set; }
-        public int IconIndex { get; set; }
+#if WebService
+        [MaxLength(256)]
+#endif
+        public string IconName { get; set; }
 
         public Group Group { get; set; }
     }

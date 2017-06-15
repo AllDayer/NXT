@@ -15,7 +15,7 @@ namespace NXT
             InitializeComponent();
             CurrentApp.MainViewModel = new ViewModels.MainViewModel();
 
-            NavigationService.NavigateAsync("/LoginPage");
+            NavigationService.NavigateAsync("/NavigationPage/SummaryPage");
         }
 
         protected override void RegisterTypes()

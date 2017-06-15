@@ -8,6 +8,13 @@ namespace NXT.Views
         public BuyPage()
         {
             InitializeComponent();
+            CostSlider.ValueChanged += CostSlider_ValueChanged;
+        }
+
+        private void CostSlider_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            var newStep = System.Math.Round(e.NewValue / 1.0);
+            CostSlider.Value = newStep * 1.0;
         }
 
         protected override void OnBindingContextChanged()

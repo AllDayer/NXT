@@ -23,17 +23,10 @@ namespace NXT.Views
         }
 
         // Method for animation child in PopupPage
-        // Invoced after custom animation end
-        protected virtual Task OnAppearingAnimationEnd()
-        {
-            return Content.FadeTo(0.5);
-        }
-
-        // Method for animation child in PopupPage
         // Invoked before custom animation begin
-        protected virtual Task OnDisappearingAnimationBegin()
+        protected async override Task OnDisappearingAnimationBegin()
         {
-            return Content.FadeTo(1);
+            await Content.FadeTo(1);
         }
 
         protected override bool OnBackButtonPressed()
@@ -58,16 +51,6 @@ namespace NXT.Views
         private async void CloseAllPopup()
         {
             await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
-        }
-
-        private async void OnAdd(object sender, System.EventArgs e)
-        {
-            //if (name.Text.Length > 0)
-            //{
-            //    var user = new UserDto() { UserName = name.Text, Email = email.Text };
-            //    await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
-            //    CallbackEvent?.Invoke(this, user);
-            //}
         }
     }
 }

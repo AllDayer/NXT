@@ -31,6 +31,11 @@ namespace NXT.Views
                 SummaryVM.OnBuyCommandExecuted(args);
             };
             card.GestureRecognizers.Add(tap);
+            if (BindingContext != null && ((GroupDto)BindingContext).WhoseShout != null && !String.IsNullOrEmpty(((GroupDto)BindingContext).WhoseShout.AvatarUrl))
+            {
+                initials.IsVisible = false;
+            }
+
             //WebImage.Source = Settings.Current.AvatarUrl;
             //circle2.Source = Settings.Current.AvatarUrl;
 

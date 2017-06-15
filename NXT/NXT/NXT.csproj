@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="Controls\CardView.cs" />
     <Compile Include="Controls\CustomImageButton.cs" />
+    <Compile Include="Controls\FloatingActionButton.cs" />
     <Compile Include="Controls\GridListView.cs" />
     <Compile Include="Controls\RepeaterView.cs" />
     <Compile Include="CurrentApp.cs" />

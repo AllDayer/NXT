@@ -6,6 +6,7 @@
              Title="Add Group Member"
              xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
              xmlns:circle="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
              x:Class="NXT.Views.AddUserToGroupPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -13,16 +14,17 @@
             <helper:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <StackLayout Spacing="10" Margin="10,10,10,0">
+    <StackLayout Spacing="10" Margin="10,10,10,0"  VerticalOptions="FillAndExpand">
         <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="15">
-            <Button x:Name="NewContact" Text="Add" Command="{Binding OpenPopupCommand}" BackgroundColor="#03A9F4"/>
-            <Button x:Name="viewContacts" Text="View Contacts" Command="{Binding OpenContactsCommand}" BackgroundColor="#03A9F4"/>
+            <Button x:Name="previousContacts" Text="Previous" Command="{Binding PreviousContactsCommand}" BackgroundColor="#03A9F4" BorderRadius="50" BorderColor="Wheat" BorderWidth="1"/>
+            <Button x:Name="viewContacts" Text="View Contacts" Command="{Binding OpenContactsCommand}" BackgroundColor="#03A9F4" BorderRadius="50"/>
             <!--<Button x:Name="Existing"/>-->
         </StackLayout>
 
-        <Label Text="Existing"/>
         <ActivityIndicator Color="Red" IsRunning="true" IsVisible="{Binding RunActivity}"/>
-        <ListView x:Name="friends" ItemsSource="{Binding Friends}" RowHeight="55" VerticalOptions="StartAndExpand" CachingStrategy="RecycleElement">
+        <AbsoluteLayout VerticalOptions="FillAndExpand">
+            <ListView x:Name="friends" ItemsSource="{Binding Friends}" RowHeight="55" VerticalOptions="FillAndExpand" CachingStrategy="RecycleElement" AbsoluteLayout.LayoutFlags="All"
+                                      AbsoluteLayout.LayoutBounds="0,1,1,1">
             <!--IsVisible="{Binding RunActivity, Converter={StaticResource InverseBooleanConverter}}"-->
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -59,6 +61,14 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+            <control:FloatingActionButton x:Name="FAB" HorizontalOptions="End" Command="{Binding OpenPopupCommand}" 
+                                          Image="ic_plus_white_24dp.png"
+                                          AbsoluteLayout.LayoutFlags="PositionProportional"
+                               AbsoluteLayout.LayoutBounds="1,1,-1,-1"
+                                          Margin="10"/>
+        </AbsoluteLayout>
+        <!--<Button x:Name="NewContact" Text="Add" Command="{Binding OpenPopupCommand}" BackgroundColor="#03A9F4"/>-->
 
         <!--<StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">
             <Button Text="Cancel" Command="{Binding CancelCommand}" BackgroundColor="#03A9F4" />

@@ -13,7 +13,7 @@ namespace NXTWebService.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201705310934539_Initial"; }
+            get { return "201706102229179_Initial"; }
         }
         
         string IMigrationMetadata.Source

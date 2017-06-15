@@ -12,8 +12,10 @@
         </ResourceDictionary>
     </ContentView.Resources>
     <ContentView.Content>
-        <StackLayout IsClippedToBounds="True" WidthRequest="55">
-            <circle:CircleImage x:Name="circle"
+        <StackLayout IsClippedToBounds="True" >
+            <AbsoluteLayout x:Name="absLayout" HorizontalOptions="Center">
+                <circle:CircleImage 
+                            x:Name="circle"
                             Aspect="AspectFit" 
                             FillColor="Black" 
                             BorderColor="White" 
@@ -23,7 +25,25 @@
                             HorizontalOptions="Center"
                             Source="{Binding AvatarUrl, Converter={StaticResource AvatarConverter}}"
                             />
-            <Label Text="{Binding UserName}" HorizontalOptions="CenterAndExpand" WidthRequest="100" LineBreakMode="TailTruncation" XAlign="Center" />
+                <Label Text="{Binding Initial}" x:Name="initials" XAlign="Center" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontSize="Large"
+                       AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, -1, -1"/>
+
+                <ContentView x:Name="CloseCV" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1, 0, -1, -1">
+                    <circle:CircleImage 
+                            x:Name="circleClose"
+                            Aspect="AspectFit" 
+                            FillColor="Black" 
+                            BorderColor="White" 
+                            BorderThickness="1" 
+                            HeightRequest="18" 
+                            WidthRequest="18"
+                            HorizontalOptions="Center"
+                            Source="close_circle_button.png"
+                            />
+                </ContentView>
+
+            </AbsoluteLayout>
+            <Label Text="{Binding UserName}" HorizontalOptions="CenterAndExpand" WidthRequest="55" LineBreakMode="TailTruncation" XAlign="Center"/>
         </StackLayout>
     </ContentView.Content>
 </ContentView>

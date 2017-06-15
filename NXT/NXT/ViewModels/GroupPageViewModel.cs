@@ -22,7 +22,7 @@ namespace NXT.ViewModels
         INavigationService m_NavigationService;
         IEventAggregator m_EventAggregator;
 
-        Guid DummyGuid = new Guid("99999999-9999-9999-9999-999999999999");
+        public static Guid DummyGuid = new Guid("99999999-9999-9999-9999-999999999999");
 
         IEnumerable<UserDto> Friends { get; set; }
 
@@ -88,6 +88,19 @@ namespace NXT.ViewModels
             }
         }
 
+        private string m_SelectedIconName = "";
+        public string SelectedIconName
+        {
+            get
+            {
+                return m_SelectedIconName;
+            }
+            set
+            {
+                m_SelectedIconName = value;
+                RaisePropertyChanged(nameof(SelectedIconName));
+            }
+        }
         private bool m_TrackCost = true;
         public bool TrackCost
         {
@@ -126,7 +139,7 @@ namespace NXT.ViewModels
             //AddUserToGroupCommand = new DelegateCommand(OnAddUserToGroupCommand);
             CancelCommand = new DelegateCommand(OnCancelCommand);
             ClickExtrasCommand = new DelegateCommand(OnClickExtrasCommand);
-            ClickIconCommand = new Command<object>(OnClickIconCommand);
+            //ClickIconCommand = new Command<object>(OnClickIconCommand);
             ClickIcon = new DelegateCommand(OnClickIcon);
             LeaveGroupCommand = new DelegateCommand(OnLeaveGroupCommand);
             UserClickedCommand = new DelegateCommand<int?>(OnUserClickedCommand);
@@ -150,12 +163,6 @@ namespace NXT.ViewModels
             CheckSubmit();
         }
 
-        //public void OnAddUserToGroupCommand()
-        //{
-        //    UsersInGroup.Add(new UserDto());
-        //    RaisePropertyChanged(nameof(UsersInGroup));
-        //}
-
         public async void OnCreateGroupCommand()
         {
 
@@ -167,7 +174,7 @@ namespace NXT.ViewModels
                 Group.Name = GroupName;
                 Group.Users = UsersInGroup.ToList();
                 Group.TrackCost = TrackCost;
-                Group.GroupIconIndex = SelectedIconIndex;
+                Group.GroupIconName = SelectedIconName;
                 await CurrentApp.MainViewModel.ServiceApi.PutGroup(Group);
 
                 OnGoBack(true);
@@ -179,6 +186,7 @@ namespace NXT.ViewModels
                     ID = Guid.NewGuid(),
                     Name = GroupName,
                     TrackCost = TrackCost,
+                    GroupIconName = SelectedIconName,
                     Users = UsersInGroup.ToList()
                 };
 
@@ -189,15 +197,11 @@ namespace NXT.ViewModels
                 {
                     CurrentApp.MainViewModel.GroupColourDictionary = new Dictionary<Guid, string>();
                 }
-                //CurrentApp.MainViewModel.GroupColourDictionary.Add(Group.ID, SelectedColour);
-                //await CurrentApp.MainViewModel.SaveGroupColours();
 
                 var groups = await CurrentApp.MainViewModel.ServiceApi.GetGroups(Settings.Current.UserGuid.ToString());
                 nav.Add("model", groups);
                 await _navigationService.NavigateAsync("/NavigationPage/SummaryPage?refresh=1", nav);
             }
-
-            //await CurrentApp.MainViewModel.SaveGroupColours();
         }
 
 
@@ -217,39 +221,26 @@ namespace NXT.ViewModels
             OnGoBack(false);
         }
 
-        void OnClickIconCommand(object s)
+        //void OnClickIconCommand(object s)
+        //{
+        //    SelectedIconIndex = (int)s;
+        //    OnClickIcon();
+        //}
+
+        void OnClickIconNameCommand(object s)
         {
-            SelectedIconIndex = (int)s;
+            SelectedIconName = (string)s;
             OnClickIcon();
         }
 
         public async void OnClickIcon()
         {
             var page = new Views.PopupAddUser();
-
-            //page.CallbackEvent += PageIcon_CallbackEvent;
-
- //           await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PushAsync(page);
-
-            //await _navigationService.PopupGoBackAsync(new NavigationParameters { { NavigationParams.NavContextPopupFav, fav } }, false);
             NavigationParameters nav = new NavigationParameters();
             nav.Add("vm", this);
             //await _navigationService.PushPopupPageAsync("PopupIcon", nav);
             await _navigationService.NavigateAsync("PopupIconPage", nav, true);
-
-            //ShowIcons = !ShowIcons;
-            //RaisePropertyChanged(nameof(ShowIcons));
         }
-
-        //private void Page_CallbackEvent(object sender, int e)
-        //{
-        //    if (e != null && e.UserName.Length > 0)
-        //    {
-        //        this.NewUserForGroup = e;
-        //        Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync(true);
-        //        OnSaveCommand();
-        //    }
-        //}
 
         public async void OnUserClickedCommand(int? index)
         {
@@ -290,9 +281,14 @@ namespace NXT.ViewModels
 
         public async void OnLeaveGroupCommand()
         {
-            await CurrentApp.MainViewModel.ServiceApi.LeaveGroup(this.Group.ID.ToString(), Settings.Current.UserGuid.ToString());
+            if (!IsBusy)
+            {
+                this.IsBusy = true;
+            
+                await CurrentApp.MainViewModel.ServiceApi.LeaveGroup(this.Group.ID.ToString(), Settings.Current.UserGuid.ToString());
 
-            await _navigationService.NavigateAsync("/NavigationPage/SummaryPage?refresh=1");
+                await _navigationService.NavigateAsync("/NavigationPage/SummaryPage?refresh=1");
+            }
         }
 
         private bool IsUserInGroup(UserDto user)
@@ -360,6 +356,7 @@ namespace NXT.ViewModels
                     RaisePropertyChanged(nameof(Group));
                     GroupName = Group.Name;
                     TrackCost = Group.TrackCost;
+                    SelectedIconName = Group.GroupIconName;
                     RaisePropertyChanged(nameof(GroupName));
                     //UsersInGroup = new ObservableCollection<ShoutUserDto>(Group.Users);
                     UsersInGroup.Clear();

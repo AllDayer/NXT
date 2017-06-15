@@ -19,11 +19,11 @@
         <ScrollView BackgroundColor="#303030" Padding="10">
             <StackLayout x:Name="Anchor" >
 
-                <Label Text="It looks like you're not in any groups. Add a group to start tracking!" IsVisible="{Binding NoGroups}" Margin="20"/>
+                <!--<Label Text="It looks like you're not in any groups. Add a group to start tracking!" IsVisible="{Binding NoGroups}" Margin="20"/>-->
 
                 <control:GroupRepeaterView x:Name="repeater" ItemsSource="{Binding Groups}" ParentVM="{Binding .}" />
 
-                <Button x:Name="btn" Command="{Binding NewGroupCommand}"  Image="ic_account_plus_white_48dp" />
+                <Button x:Name="btn" Command="{Binding NewGroupCommand}"  Image="ic_account_multiple_plus_white_48dp.png" />
             </StackLayout>
         </ScrollView>
     </ptr:PullToRefreshLayout>

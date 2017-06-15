@@ -12,7 +12,7 @@ namespace NXTWebService.Migrations
                 c => new
                     {
                         ID = c.Guid(nullable: false),
-                        Name = c.String(),
+                        Name = c.String(maxLength: 256),
                         Category = c.String(),
                         TrackCost = c.Boolean(nullable: false),
                     })
@@ -23,7 +23,7 @@ namespace NXTWebService.Migrations
                 c => new
                     {
                         GroupID = c.Guid(nullable: false),
-                        IconIndex = c.Int(nullable: false),
+                        IconName = c.String(maxLength: 256),
                     })
                 .PrimaryKey(t => t.GroupID)
                 .ForeignKey("dbo.Groups", t => t.GroupID)
@@ -50,11 +50,12 @@ namespace NXTWebService.Migrations
                 c => new
                     {
                         ID = c.Guid(nullable: false),
-                        UserName = c.String(),
-                        Email = c.String(),
-                        FacebookID = c.String(),
-                        TwitterID = c.String(),
-                        AvatarUrl = c.String(),
+                        UserName = c.String(maxLength: 128),
+                        Email = c.String(maxLength: 256),
+                        FacebookID = c.String(maxLength: 256),
+                        TwitterID = c.String(maxLength: 256),
+                        AvatarUrl = c.String(maxLength: 512),
+                        Colour = c.String(maxLength: 16),
                     })
                 .PrimaryKey(t => t.ID);
             

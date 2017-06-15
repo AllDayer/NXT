@@ -21,10 +21,12 @@ namespace NXT.ViewModels
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand OpenPopupCommand { get; }
         public DelegateCommand OpenContactsCommand { get; }
+        public DelegateCommand PreviousContactsCommand { get; }
 
         public UserDto NewUserForGroup { get; set; }
         public List<UserDto> Friends { get; set; }
         public List<UserDto> ContactsByEmail { get; set; }
+        public List<UserDto> PreviousContacts { get; set; }
         private bool m_RunActivity = false;
         public bool RunActivity
         {
@@ -46,6 +48,7 @@ namespace NXT.ViewModels
             NewUserForGroup = new UserDto();
             CancelCommand = new DelegateCommand(OnCancelCommand);
             SaveCommand = new DelegateCommand(OnSaveCommand);
+            PreviousContactsCommand = new DelegateCommand(OnPreviousContactsCommand);
             OpenPopupCommand = new DelegateCommand(OnOpenPopupCommand);
             OpenContactsCommand = new DelegateCommand(OnOpenContactsCommand);
         }
@@ -57,6 +60,8 @@ namespace NXT.ViewModels
             page.CallbackEvent += Page_CallbackEvent;
 
             await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PushAsync(page);
+            //await Rg.Plugins.Popup.Extensions.NavigationExtension.PushPopupAsync(page);
+            //await m_NavigationService.PushPopupPageAsync(page);
         }
 
         private async void OnOpenContactsCommand()
@@ -65,8 +70,8 @@ namespace NXT.ViewModels
             {
                 RunActivity = true;
 
-                CrossContacts.Current.PreferContactAggregation = false;//recommended
-                                                                       //run in background
+                CrossContacts.Current.PreferContactAggregation = false;
+
                 await Task.Run(() =>
                 {
                     if (CrossContacts.Current.Contacts == null)
@@ -102,9 +107,15 @@ namespace NXT.ViewModels
             }
         }
 
+        private void OnPreviousContactsCommand()
+        {
+            Friends = PreviousContacts;
+            RaisePropertyChanged(nameof(Friends));
+        }
+
         private void Page_CallbackEvent(object sender, UserDto e)
         {
-            if (e != null && e.UserName.Length > 0)
+            if (e != null && !String.IsNullOrEmpty(e.UserName))
             {
                 this.NewUserForGroup = e;
                 Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync(true);
@@ -140,7 +151,8 @@ namespace NXT.ViewModels
         {
             if (parameters["friends"] != null)
             {
-                Friends = new List<UserDto>((IEnumerable<UserDto>)parameters["friends"]);
+                PreviousContacts = new List<UserDto>((IEnumerable<UserDto>)parameters["friends"]);
+                OnPreviousContactsCommand();
                 RaisePropertyChanged(nameof(Friends));
             }
         }

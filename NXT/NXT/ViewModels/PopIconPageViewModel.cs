@@ -23,7 +23,7 @@ namespace NXT.ViewModels
 
         async void OnClickIconCommand(object s)
         {
-            GroupVM.SelectedIconIndex = (int)s;
+            GroupVM.SelectedIconName = ((FileImageSource)s).File;
             //await m_NavigationService.GoBackAsync();
             await m_NavigationService.PopupGoBackAsync();
         }

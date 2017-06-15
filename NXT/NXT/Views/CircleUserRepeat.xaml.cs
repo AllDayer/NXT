@@ -21,8 +21,6 @@ namespace NXT.Views
         public CircleUserRepeat()
         {
             InitializeComponent();
-            //name.TextChanged += TextChanged;
-            //email.TextChanged += TextChanged;
         }
 
         private void TextChanged(object sender, TextChangedEventArgs e)
@@ -37,11 +35,23 @@ namespace NXT.Views
             {
                 Command = ShoutGroupVM.UserClickedCommand,
                 CommandParameter = Index
-
             };
+
+            if (Index == 0 || ((UserDto)BindingContext).ID == GroupPageViewModel.DummyGuid || ShoutGroupVM.IsEdit)
+            {
+                CloseCV.IsVisible = false;
+                if (((UserDto)BindingContext).ID == GroupPageViewModel.DummyGuid)
+                {
+                    circle.BorderThickness = 0;
+                    circle.FillColor = Color.Transparent;
+                }
+            }
             circle.GestureRecognizers.Add(tapGestureRecognizer);
-            //this.Remove.Clicked += Remove_Clicked;
-            //this.Remove.SetBinding(IsVisibleProperty, new Binding("IsEdit", BindingMode.Default, new InverseBooleanConverter(), null, null, ShoutGroupVM));
+
+            if (BindingContext != null && !String.IsNullOrEmpty(((UserDto)BindingContext).AvatarUrl))
+            {
+                initials.IsVisible = false;
+            }
         }
     }
 }

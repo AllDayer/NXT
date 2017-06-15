@@ -3,8 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+             xmlns:circle="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
              x:Class="NXT.Views.PopupAddUser">
-    <!--Animations use example-->
+    <pages:PopupPage.Resources>
+        <ResourceDictionary>
+            <helper:AvatarConverter x:Key="AvatarConverter"/>
+        </ResourceDictionary>
+    </pages:PopupPage.Resources>
     <pages:PopupPage.Animation>
         <animations:ScaleAnimation 
       PositionIn="Center"
@@ -14,38 +20,14 @@
       DurationIn="400"
       DurationOut="300"
       EasingIn="SinOut"
-      EasingOut="SinIn"
-      HasBackgroundAnimation="True"/>
+      EasingOut="SinIn"/>
     </pages:PopupPage.Animation>
-    <ScrollView HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+    <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
         <AbsoluteLayout x:Name="absLayout">
-            <ContentView
-          AbsoluteLayout.LayoutFlags="PositionProportional"
-          AbsoluteLayout.LayoutBounds="1, 0, -1, -1">
-                <ContentView.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnCloseButtonTapped"/>
-                </ContentView.GestureRecognizers>
-                <Image x:Name="CloseImage" HeightRequest="30" WidthRequest="30">
-                    <Image.Source>
-                        <OnPlatform
-                          x:TypeArguments="ImageSource"
-                          Android="ic_close_circle_white_18dp.png"
-                          iOS="close_circle_button.png"/>
-                    </Image.Source>
-                </Image>
-            </ContentView>
-            <Frame x:Name="FrameContainer" Margin="15" HorizontalOptions="CenterAndExpand" BackgroundColor="#03A9F4">
+            <Frame x:Name="FrameContainer" Margin="15" HorizontalOptions="Center" BackgroundColor="#03A9F4">
                 <StackLayout IsClippedToBounds="True" Padding="10, 5" Spacing="3">
-                    <Image HorizontalOptions="Center" x:Name="OctocatImage" Margin="10" HeightRequest="75" WidthRequest="75">
-                        <Image.Source>
-                            <OnPlatform
-                              x:TypeArguments="ImageSource"
-                              Android="ic_account_circle_white_36dp.png"
-                              iOS="ic_account_circle_white_36dp.png"/>
-                        </Image.Source>
-                    </Image>
-
-                    <Grid >
+                    <Image HorizontalOptions="Center" Margin="10" HeightRequest="75" WidthRequest="75" Source="ic_account_white_36dp.png"/>
+                    <Grid x:Name="myGrid">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="200"/>
@@ -59,7 +41,6 @@
                         <Image Source="ic_label_outline_white_18dp" HorizontalOptions="End" Grid.Column="0" Grid.Row="0" />
                         <Image Source="ic_email_outline_white_18dp" HorizontalOptions="End" Grid.Column="0" Grid.Row="1" />
 
-
                         <Entry x:Name="name" HorizontalOptions="FillAndExpand" Placeholder="Name" Grid.Column="1" Grid.Row="0"/>
                         <Entry x:Name="email" HorizontalOptions="FillAndExpand" Placeholder="Email" Grid.Column="1" Grid.Row="1"/>
 
@@ -72,7 +53,14 @@
                     </Button>
                 </StackLayout>
             </Frame>
-
+            <Frame x:Name="CloseCV" BackgroundColor="Transparent" Margin="0" Padding="0"
+          AbsoluteLayout.LayoutFlags="PositionProportional"
+          AbsoluteLayout.LayoutBounds="1, 0, -1, -1">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCloseButtonTapped"/>
+                </Frame.GestureRecognizers>
+                <Image x:Name="CloseImage" HeightRequest="30" WidthRequest="30" Source="close_circle_button.png"/>
+            </Frame>
         </AbsoluteLayout>
     </ScrollView>
 </pages:PopupPage>

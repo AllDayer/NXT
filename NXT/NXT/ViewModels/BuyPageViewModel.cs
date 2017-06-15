@@ -21,7 +21,7 @@ namespace NXT.ViewModels
         public DelegateCommand EditGroupCommand { get; }
         public DelegateCommand HistoryCommand { get; }
         public DelegateCommand ShowTimeCommand { get; }
-
+        public bool EditCostEnabled { get; set; }
         public ObservableCollection<UserDto> UsersForRecord { get; set; }
 
         public BuyPageViewModel(INavigationService navigationService) : base(navigationService)
@@ -34,6 +34,7 @@ namespace NXT.ViewModels
             HistoryCommand = new DelegateCommand(OnHistoryCommand);
             ShowTimeCommand = new DelegateCommand(OnShowTimeCommand);
             UsersForRecord = new ObservableCollection<UserDto>();
+            EditCostEnabled = false;
         }
 
 
@@ -63,7 +64,7 @@ namespace NXT.ViewModels
         {
             get
             {
-                return m_Record.GroupName;
+                return m_Group.Name;
             }
         }
 
@@ -86,6 +87,11 @@ namespace NXT.ViewModels
                 float cost = 0;
                 float.TryParse(value, out cost);
                 m_Record.Cost = cost;
+                if(cost >= 49.0f)
+                {
+                    EditCostEnabled = true;
+                    RaisePropertyChanged(nameof(EditCostEnabled));
+                }
                 RaisePropertyChanged(nameof(Cost));
             }
         }
@@ -217,13 +223,12 @@ namespace NXT.ViewModels
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
             m_Record = (RecordDto)parameters["model"];
+            m_Group = (GroupDto)parameters["group"];
+            RaisePropertyChanged(nameof(TrackCost));
             RaisePropertyChanged(nameof(GroupID));
             RaisePropertyChanged(nameof(ID));
             RaisePropertyChanged(nameof(RecordTitle));
             RaisePropertyChanged(nameof(Cost));
-
-            m_Group = (GroupDto)parameters["group"];
-            RaisePropertyChanged(nameof(TrackCost));
 
             foreach (var u in m_Group.Users)
             {

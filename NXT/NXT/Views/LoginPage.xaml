@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage
+<pages:PopupPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="{Binding Title}"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
     xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
     xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
     x:Class="NXT.Views.LoginPage">
@@ -24,16 +24,18 @@
             <helper:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <AbsoluteLayout>
-        <StackLayout Spacing="30" 
+    <Frame x:Name="FrameContainer" Margin="15" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="Black">
+        <AbsoluteLayout>
+            <StackLayout Spacing="30" 
                      AbsoluteLayout.LayoutBounds=".5,.25" AbsoluteLayout.LayoutFlags="PositionProportional">
-            <Label Text="NXT" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
+                <Label Text="NXT" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
 
-            <Label Text="Continue with:" FontSize="Small" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}"/>
-            <control:CustomImageButton Image="facebooklogin"  x:Name="OAuth" Command="{Binding OAuthCommand}" BackgroundColor="Transparent" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}"/>
-            <ActivityIndicator Color="Red" IsRunning="true" IsVisible="{Binding IsLoggingIn}"/>
-            <Label Text="Logging you in!" Font="Large" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsLoggingIn}"/>
-        </StackLayout>
-    </AbsoluteLayout>
+                <Label Text="Continue with:" FontSize="Small" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}"/>
+                <control:CustomImageButton Image="facebooklogin"  x:Name="OAuth" Command="{Binding OAuthCommand}" BackgroundColor="Transparent" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}"/>
+                <ActivityIndicator Color="Red" IsRunning="true" IsVisible="{Binding IsLoggingIn}"/>
+                <Label Text="Logging you in!" Font="Large" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsLoggingIn}"/>
+            </StackLayout>
+        </AbsoluteLayout>
+    </Frame>
     <!--</Grid>-->
-</ContentPage>
+</pages:PopupPage>

@@ -19,7 +19,9 @@ namespace NXT.ViewModels
     {
         IAuthenticationService m_AuthenticationService { get; }
         IPageDialogService _pageDialogService { get; }
+        INavigationService m_NavigationService { get; }
         public DelegateCommand OAuthCommand { get; }
+        public SummaryPageViewModel SummaryVM { get; set; }
 
         //private String TristanUserString = "d9c91004-3994-4bb4-a703-267904985126";
 
@@ -28,7 +30,7 @@ namespace NXT.ViewModels
         {
             m_AuthenticationService = authenticationService;
             _pageDialogService = pageDialogService;
-
+            m_NavigationService = navigationService;
             Title = "Login";
 
             var token = FbAccessToken.Current;
@@ -63,6 +65,13 @@ namespace NXT.ViewModels
             if(res)
             {
                 await AuthenticationSuccess();
+
+                await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
+                SummaryVM.OnRefreshCommand();
+            }
+            else
+            {
+                IsLoggingIn = false;
             }
         }
 
@@ -73,6 +82,13 @@ namespace NXT.ViewModels
             if (res)
             {
                 await AuthenticationSuccess();
+
+                await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
+                await _navigationService.NavigateAsync("/NavigationPage/SummaryPage");
+            }
+            else
+            {
+                IsLoggingIn = false;
             }
             //IsLoggingIn = true;
             //Account account = GetFacebookAccount();
@@ -102,16 +118,21 @@ namespace NXT.ViewModels
         {
             //Account account = GetFacebookAccount();
             //bool success = await m_AuthenticationService.SocialLogin(account);
+            m_AuthenticationService.SetLoggedIn(true);
             NavigationParameters nav = new NavigationParameters();
             var groups = await CurrentApp.MainViewModel.ServiceApi.GetGroups(Settings.Current.UserGuid.ToString());
             if (groups != null)
             {
                 Settings.Current.Groups = new System.Collections.ObjectModel.ObservableCollection<GroupDto>(groups);
 
-                await CurrentApp.MainViewModel.RefreshGroupColours();
+                //await CurrentApp.MainViewModel.RefreshGroupColours();
             }
 
-            await _navigationService.NavigateAsync("/NavigationPage/SummaryPage");
+            //await _navigationService.NavigateAsync("/NavigationPage/SummaryPage");
+            //SummaryVM.Load(false);
+            //await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
+            //await m_NavigationService.PopupGoBackAsync();
+
         }
 
         public async void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
@@ -141,6 +162,15 @@ namespace NXT.ViewModels
             {
                 authenticator.Completed -= OnAuthCompleted;
                 authenticator.Error -= OnAuthError;
+            }
+        }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            if (parameters["vm"] != null)
+            {
+                SummaryVM = (SummaryPageViewModel)parameters["vm"];
             }
         }
 

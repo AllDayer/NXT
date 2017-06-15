@@ -3,27 +3,49 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="{Binding Title}"
              xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
+             xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
              x:Class="NXT.Views.BuyPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="History" Command="{Binding HistoryCommand}" />
         <ToolbarItem Text="Edit" Command="{Binding EditGroupCommand}" />
     </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helper:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <StackLayout Margin="20" Spacing="15">
-        <Label Text="{Binding RecordTitle}" HorizontalOptions="Start" FontSize="Large" />
+        <Label Text="{Binding RecordTitle}" HorizontalOptions="Start" FontSize="Large" TextColor="White" />
         <StackLayout>
-            <Label Text="Who did it?" />
+            <Label Text="Who did it?" FontSize="Medium" TextColor="White"/>
             <Picker ItemsSource="{Binding UsersForRecord}" ItemDisplayBinding="{Binding UserName}" SelectedIndex="{Binding SelectedIndex}"/>
         </StackLayout>
-        <StackLayout IsVisible="{Binding TrackCost}">
-            <Label Text="Cost"/>
-            <Entry Placeholder="Cost" Keyboard="Numeric" Text="{Binding Cost}"/>
-        </StackLayout>
+  
+        <Grid IsVisible="{Binding TrackCost}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Text="Cost" Grid.Row="0" Grid.Column="0" VerticalOptions="Center" FontSize="Medium" TextColor="White"/>
+            <Entry Placeholder="Cost" Keyboard="Numeric" Text="{Binding Cost}" Grid.Row="0" Grid.Column="1" IsVisible="{Binding EditCostEnabled}"/>
+            <Label Text="{Binding Cost}" Grid.Row="0" Grid.Column="1" IsVisible="{Binding EditCostEnabled, Converter={StaticResource InverseBooleanConverter}}"/>
+            <Slider x:Name="CostSlider" Value="{Binding Cost}" Minimum="0" Maximum="50" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
+        </Grid>
         <control:CustomImageButton Text="Options" Command="{Binding ShowTimeCommand}" BackgroundColor="Transparent" HorizontalOptions="End"/>
-        <StackLayout x:Name="ShowTimeSL" IsVisible="{Binding ShowTime}">
-            <Label Text="PurchaseTime" />
-            <DatePicker Date="{Binding Record.PurchaseTimeUtc}"/>
-            <TimePicker Time="{Binding Time}"/>
-        </StackLayout>
+
+        <Grid x:Name="ShowTimeSL" IsVisible="{Binding ShowTime}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Label Text="Date" Grid.Column="0" Grid.Row="0" VerticalOptions="Center"/>
+            <Label Text="Time" Grid.Column="0" Grid.Row="1" VerticalOptions="Center"/>
+            <DatePicker Date="{Binding Record.PurchaseTimeUtc}" Grid.Column="1" Grid.Row="0"/>
+                <TimePicker Time="{Binding Time}" Grid.Column="1" Grid.Row="1"/>
+
+        </Grid>
         <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="EndAndExpand">
             <Button Text="Cancel" Command="{Binding CancelCommand}" BackgroundColor="#03A9F4" />
             <Button Text="Record it!" Command="{Binding BuyCommand}" BackgroundColor="#03A9F4"/>

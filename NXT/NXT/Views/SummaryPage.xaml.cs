@@ -25,7 +25,16 @@ namespace NXT.Views
             repeater.ParentVM = BindingContext;
             base.OnBindingContextChanged();
         }
-        
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            if (BindingContext != null)
+            {
+                ((SummaryPageViewModel)BindingContext).Login();
+            }
+        }
+
         private void SetRepeater()
         {
             //

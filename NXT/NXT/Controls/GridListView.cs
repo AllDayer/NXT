@@ -138,7 +138,7 @@ namespace NXT.Controls
                             Image = ((FileImageSource)items[index]),
                             BackgroundColor = Color.Transparent,
                             Command = Command,
-                            CommandParameter = index,
+                            CommandParameter = tile,
                             BorderRadius = 5,
                             VerticalOptions = LayoutOptions.FillAndExpand,
                             HorizontalOptions = LayoutOptions.FillAndExpand

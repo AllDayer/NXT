@@ -194,7 +194,7 @@ namespace NXT.Services
                 var response = await PutAsJsonAsync(client, "api/groups/" + group.ID, group);
                 response.EnsureSuccessStatusCode();
             }
-            catch (Exception e)
+            catch (Exception )
             {
                 return;
             }

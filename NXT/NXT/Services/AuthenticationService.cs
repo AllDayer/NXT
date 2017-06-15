@@ -17,11 +17,13 @@ namespace NXT.Services
     public class AuthenticationService : IAuthenticationService
     {
         INavigationService m_NavigationService { get; }
+        public bool LoggedIn { get; set; }
 
         public AuthenticationService(INavigationService navigationService)
         {
             m_NavigationService = navigationService;
             parameters.Add("fields", "name, email,first_name,last_name,gender,picture.type(large)");
+            LoggedIn = false;
         }
 
         //public async Task<bool> SocialLogin(Account account)
@@ -63,8 +65,12 @@ namespace NXT.Services
             IGraphRequest request = Xamarin.Forms.DependencyService.Get<IGraphRequest>().NewRequest(token, "/me", parameters);
             IGraphResponse response = await request.ExecuteAsync();
 
-            FacebookModel deserialized = GetFBData(JObject.Parse(response.RawResponse));
-            return await RegisterAndUpdate(deserialized);
+            if (response.RawResponse != null)
+            {
+                FacebookModel deserialized = GetFBData(JObject.Parse(response.RawResponse));
+                return await RegisterAndUpdate(deserialized);
+            }
+            return false;
         }
 
         public async Task<bool> SocialLoginFacebook()
@@ -280,11 +286,11 @@ namespace NXT.Services
                 Email = Settings.Current.UserEmail,
                 AvatarUrl = Settings.Current.AvatarUrl,
                 Colour = Settings.Current.Colour
-
             };
             if (newID)
             {
                 u.ID = Guid.NewGuid();
+                u.Colour = CurrentApp.MainViewModel.RandomColour();
             }
             else
             {
@@ -336,6 +342,16 @@ namespace NXT.Services
                 }
             }
             await m_NavigationService.NavigateAsync("/LoginPage");
+        }
+
+        public bool IsLoggedIn()
+        {
+            return LoggedIn;
+        }
+
+        public void SetLoggedIn(bool val)
+        {
+            LoggedIn = val;
         }
     }
 }

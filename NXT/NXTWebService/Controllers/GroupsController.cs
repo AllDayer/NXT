@@ -28,7 +28,7 @@ namespace NXTWebService.Controllers
                              Category = s.Category,
                              Name = s.Name,
                              TrackCost = s.TrackCost,
-                             GroupIconIndex = s.GroupIcon.IconIndex,
+                             GroupIconName = s.GroupIcon.IconName,
                              Users = (from u in db.NXTUsers
                                       where s.Users.Any(sh => sh.ID == u.ID)
                                       select new UserDto()
@@ -65,7 +65,7 @@ namespace NXTWebService.Controllers
                              Category = s.Category,
                              Name = s.Name,
                              TrackCost = s.TrackCost,
-                             GroupIconIndex = s.GroupIcon.IconIndex,
+                             GroupIconName = s.GroupIcon.IconName,
                              Records = (from record in db.Records
                                         where s.Records.Any(sh => sh.ID == record.ID)
                                         orderby record.PurchaseTimeUtc descending
@@ -109,7 +109,7 @@ namespace NXTWebService.Controllers
                             Category = s.Category,
                             Name = s.Name,
                             TrackCost = s.TrackCost,
-                            GroupIconIndex = s.GroupIcon != null ? s.GroupIcon.IconIndex : -1,
+                            GroupIconName = s.GroupIcon != null ? s.GroupIcon.IconName : "",
                             Records = (from record in db.Records
                                        where s.Records.Any(sh => sh.ID == record.ID)
                                        orderby record.PurchaseTimeUtc descending
@@ -173,13 +173,13 @@ namespace NXTWebService.Controllers
                 GroupIcon sgi = new GroupIcon()
                 {
                     Group = group,
-                    IconIndex = groupDto.GroupIconIndex,
+                    IconName = groupDto.GroupIconName
                 };
                 group.GroupIcon = sgi;
             }
             else
             {
-                group.GroupIcon.IconIndex = groupDto.GroupIconIndex;
+                group.GroupIcon.IconName = groupDto.GroupIconName;
             }
 
 
@@ -276,7 +276,7 @@ namespace NXTWebService.Controllers
                     return Ok(group);
                 }
                 //TODO modify when adding new auth
-                else if (group.Users.Count > 1 && !group.Users.Any(x => x.FacebookID.Length > 0 || x.TwitterID.Length > 0))
+                else if (group.Users.Count > 1 && !group.Users.Any(x => !String.IsNullOrEmpty(x.FacebookID) || !String.IsNullOrEmpty(x.TwitterID)))
                 {
                     db.Groups.Remove(group);
                     db.SaveChanges();
@@ -372,7 +372,7 @@ namespace NXTWebService.Controllers
             {
                 GroupID = gro.ID,
                 Group = gro,
-                IconIndex = groupDto.GroupIconIndex
+                IconName = groupDto.GroupIconName
             };
             gro.GroupIcon = groupIcon;
 

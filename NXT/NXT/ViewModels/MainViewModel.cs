@@ -49,8 +49,18 @@ namespace NXT.ViewModels
 
         public List<FileImageSource> Icons = new List<FileImageSource>()
         {
+              (FileImageSource)ImageSource.FromFile("ic_currency_usd_white_48dp.png"),
+              (FileImageSource)ImageSource.FromFile("ic_currency_gbp_white_48dp.png"),
+              (FileImageSource)ImageSource.FromFile("ic_currency_btc_white_48dp.png"),
               (FileImageSource)ImageSource.FromFile("ic_coffee_outline_white_48dp.png"),
-              (FileImageSource)ImageSource.FromFile("ic_food_croissant_white_48dp.png")
+              (FileImageSource)ImageSource.FromFile("ic_food_croissant_white_48dp.png"),
+              (FileImageSource)ImageSource.FromFile("ic_car_white_48dp.png"),
+              (FileImageSource)ImageSource.FromFile("ic_hotel_white_48dp.png"),
+              (FileImageSource)ImageSource.FromFile("ic_hamburger_white_48dp.png"),
+              (FileImageSource)ImageSource.FromFile("ic_food_fork_drink_white_48dp.png"),
+              (FileImageSource)ImageSource.FromFile("ic_delete_white_48dp.png"),
+              (FileImageSource)ImageSource.FromFile("ic_cup_white_48dp.png"),
+              (FileImageSource)ImageSource.FromFile("ic_cat_white_48dp.png"),
         };
 
         public MainViewModel()

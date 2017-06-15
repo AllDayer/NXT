@@ -13,5 +13,7 @@ namespace NXT.Services
         void RegisterFacebook(LoginPageViewModel loginViewModel);
         Task<bool> HandleAlreadyLoggedIn(FbAccessToken token);
         void Logout();
+        bool IsLoggedIn();
+        void SetLoggedIn(bool val);
     }
 }
