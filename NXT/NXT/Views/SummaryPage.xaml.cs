@@ -14,10 +14,10 @@ namespace NXT.Views
             InitializeComponent();
             _ea = eventAggregator;
             //_ea.GetEvent<GroupsLoadedEvent>().Subscribe(() => SetRepeater());
-            btn.BackgroundColor = Color.Transparent;
-            btn.BorderColor = Color.Transparent;
-            btn.BorderWidth = 0;
-            btn.HorizontalOptions = LayoutOptions.Center;
+            //btn.BackgroundColor = Color.Transparent;
+            //btn.BorderColor = Color.Transparent;
+            //btn.BorderWidth = 0;
+            //btn.HorizontalOptions = LayoutOptions.Center;
         }
 
         protected override void OnBindingContextChanged()

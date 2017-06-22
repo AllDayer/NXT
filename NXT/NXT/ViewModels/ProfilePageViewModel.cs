@@ -73,7 +73,9 @@ namespace NXT.ViewModels
             User.Colour = SelectedColour;
             User.UserName = Name;
             await CurrentApp.MainViewModel.ServiceApi.PatchDtoUser(User);
-            await m_NavigationService.GoBackAsync();
+            NavigationParameters nav = new NavigationParameters();
+            nav.Add("alert", "Saved");
+            await m_NavigationService.GoBackAsync(nav);
         }
 
         private bool CanExecuteOnSave()

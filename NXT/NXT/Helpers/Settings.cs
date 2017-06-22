@@ -123,16 +123,11 @@ namespace NXT.Helpers
                     Email = UserEmail,
                     AvatarUrl = AvatarUrl,
                     Colour = Colour,
+                    SocialID = SocialUserID,
+                    AuthType = UserAuth
                     //UserFirstName = value.UserName;
                 };
 
-                switch (UserAuth)
-                {
-                    case AuthType.Facebook:
-                        u.AuthType = AuthType.Facebook;
-                        u.SocialID = SocialUserID;
-                        break;
-                }
                 return u;
             }
             set

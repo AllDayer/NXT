@@ -24,7 +24,7 @@
     </pages:PopupPage.Animation>
     <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
         <AbsoluteLayout x:Name="absLayout">
-            <Frame x:Name="FrameContainer" Margin="15" HorizontalOptions="Center" BackgroundColor="#03A9F4">
+            <Frame x:Name="FrameContainer" Margin="15" HorizontalOptions="Center" BackgroundColor="#303030">
                 <StackLayout IsClippedToBounds="True" Padding="10, 5" Spacing="3">
                     <Image HorizontalOptions="Center" Margin="10" HeightRequest="75" WidthRequest="75" Source="ic_account_white_36dp.png"/>
                     <Grid x:Name="myGrid">
@@ -46,7 +46,7 @@
 
                     </Grid>
 
-                    <Button Margin="10, 5" BackgroundColor="#7dbbe6" Clicked="OnAdd" HorizontalOptions="Fill" x:Name="AddButton" Text="Add">
+                    <Button Margin="10, 5" BackgroundColor="#03A9F4" Clicked="OnAdd" HorizontalOptions="Fill" x:Name="AddButton" Text="Add">
                         <Button.HeightRequest>
                             <OnPlatform x:TypeArguments="x:Double" Android="50" iOS="30" WinPhone="30"/>
                         </Button.HeightRequest>

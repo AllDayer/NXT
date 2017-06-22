@@ -8,6 +8,7 @@ namespace NXT.Views
     public partial class PopupAddUser : Rg.Plugins.Popup.Pages.PopupPage
     {
         public event System.EventHandler<UserDto> CallbackEvent;
+        public event EventHandler LeavingPopUpEvent;
 
         public PopupAddUser()
         {
@@ -79,6 +80,7 @@ namespace NXT.Views
 
         private async void CloseAllPopup()
         {
+            LeavingPopUpEvent?.Invoke(this, null);
             await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
         }
 
@@ -86,6 +88,7 @@ namespace NXT.Views
         {
             if (!String.IsNullOrEmpty(name.Text))
             {
+                LeavingPopUpEvent?.Invoke(this, null);
                 var user = new UserDto() { UserName = name.Text, Email = email.Text };
                 await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
                 CallbackEvent?.Invoke(this, user);

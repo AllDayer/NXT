@@ -11,20 +11,38 @@
         <ToolbarItem Text="Logout" Command="{Binding LogoutCommand}" />
     </ContentPage.ToolbarItems>
 
-    <ptr:PullToRefreshLayout
-          IsPullToRefreshEnabled="True"
-          RefreshCommand="{Binding RefreshCommand}"
-          IsRefreshing="{Binding IsBusy}"
-          RefreshColor="Blue">
-        <ScrollView BackgroundColor="#303030" Padding="10">
-            <StackLayout x:Name="Anchor" >
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-                <!--<Label Text="It looks like you're not in any groups. Add a group to start tracking!" IsVisible="{Binding NoGroups}" Margin="20"/>-->
+        <ptr:PullToRefreshLayout
+              IsPullToRefreshEnabled="True"
+              RefreshCommand="{Binding RefreshCommand}"
+              IsRefreshing="{Binding IsBusy}"
+              RefreshColor="Blue"
+              Grid.Row="0"
+              Grid.RowSpan="2">
+            
+            <ScrollView BackgroundColor="#303030" 
+                        Padding="10"
+                        VerticalOptions="FillAndExpand"
+                        HorizontalOptions="FillAndExpand">
 
-                <control:GroupRepeaterView x:Name="repeater" ItemsSource="{Binding Groups}" ParentVM="{Binding .}" />
+                <control:GroupRepeaterView x:Name="repeater" 
+                                           ItemsSource="{Binding Groups}" 
+                                           ParentVM="{Binding .}" 
+                                           VerticalOptions="FillAndExpand"
+                                           HorizontalOptions="FillAndExpand"/>
 
-                <Button x:Name="btn" Command="{Binding NewGroupCommand}"  Image="ic_account_multiple_plus_white_48dp.png" />
-            </StackLayout>
-        </ScrollView>
-    </ptr:PullToRefreshLayout>
+            </ScrollView>
+        </ptr:PullToRefreshLayout>
+        <control:FloatingActionButton x:Name="FAB" 
+                                      Grid.Row="1"  
+                                      HorizontalOptions="End" 
+                                      Command="{Binding NewGroupCommand}" 
+                                      Image="ic_plus_white_24dp.png"
+                                      Margin="18"/>
+    </Grid>
 </ContentPage>

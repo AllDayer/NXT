@@ -37,7 +37,18 @@ namespace NXT.Views
                     //animation.Commit(this, "FadeColours", 16, 250, Easing.CubicOut, (v, c) => this.friends.IsVisible = false);
                 }
             }
-            
+            else if (e.PropertyName == "FabVisible")
+            {
+                if (((AddUserToGroupPageViewModel)sender).FabVisible)
+                {
+                    FAB.TranslateTo(0, 0, easing: Easing.CubicInOut, length: 400u);
+                }
+                else
+                {
+                    FAB.TranslateTo(0, 80, easing: Easing.CubicInOut, length: 450u);
+                }
+            }
+
         }
 
         private void ViewContacts_Clicked(object sender, System.EventArgs e)

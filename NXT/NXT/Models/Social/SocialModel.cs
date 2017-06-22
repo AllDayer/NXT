@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace NXT.Models.Social
 {
-    public class FacebookModel
+    public class SocialModel
     {
         public string Name { get; set; }
         public string Email { get; set; }
         public string Id { get; set; }
         public string AvatarUrl { get; set; }
-
+        public AuthType AuthType { get; set; }
 
     }
 }

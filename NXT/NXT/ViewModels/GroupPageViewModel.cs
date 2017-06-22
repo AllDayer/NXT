@@ -200,6 +200,7 @@ namespace NXT.ViewModels
 
                 var groups = await CurrentApp.MainViewModel.ServiceApi.GetGroups(Settings.Current.UserGuid.ToString());
                 nav.Add("model", groups);
+                nav.Add("alert", "Group created!");
                 await _navigationService.NavigateAsync("/NavigationPage/SummaryPage?refresh=1", nav);
             }
         }
@@ -309,6 +310,7 @@ namespace NXT.ViewModels
                 NavigationParameters nav = new NavigationParameters();
                 nav.Add("group", Group);
                 nav.Add("model", ShoutFromEdit);
+                nav.Add("alert", "Saved");
                 if (refresh)
                 {
                     nav.Add("refresh", 1);

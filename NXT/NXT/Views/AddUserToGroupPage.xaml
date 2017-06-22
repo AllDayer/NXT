@@ -66,7 +66,7 @@
                                           Image="ic_plus_white_24dp.png"
                                           AbsoluteLayout.LayoutFlags="PositionProportional"
                                AbsoluteLayout.LayoutBounds="1,1,-1,-1"
-                                          Margin="10"/>
+                                          Margin="18"/>
         </AbsoluteLayout>
         <!--<Button x:Name="NewContact" Text="Add" Command="{Binding OpenPopupCommand}" BackgroundColor="#03A9F4"/>-->
 

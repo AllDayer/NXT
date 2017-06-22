@@ -6,36 +6,23 @@
     xmlns:control="clr-namespace:NXT.Controls;assembly=NXT"
     xmlns:helper="clr-namespace:NXT.Helpers;assembly=NXT"
     x:Class="NXT.Views.LoginPage">
-    <!--<Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="2*" />
-        </Grid.RowDefinitions>
-        <Grid.Resources>
-            <ResourceDictionary>
-                <Style TargetType="Entry">
-                    <Setter Property="Margin" Value="40,10" />
-                </Style>
-            </ResourceDictionary>
-        </Grid.Resources>-->
     <ContentPage.Resources>
         <ResourceDictionary>
             <helper:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Frame x:Name="FrameContainer" Margin="15" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="Black">
+    <Frame x:Name="FrameContainer" Margin="15" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="#303030">
         <AbsoluteLayout>
-            <StackLayout Spacing="30" 
-                     AbsoluteLayout.LayoutBounds=".5,.25" AbsoluteLayout.LayoutFlags="PositionProportional">
+            <StackLayout Spacing="30" AbsoluteLayout.LayoutBounds=".5,.25" AbsoluteLayout.LayoutFlags="PositionProportional">
                 <Label Text="NXT" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
 
                 <Label Text="Continue with:" FontSize="Small" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}"/>
-                <control:CustomImageButton Image="facebooklogin"  x:Name="OAuth" Command="{Binding OAuthCommand}" BackgroundColor="Transparent" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}"/>
+                <control:CustomImageButton Image="facebooklogin"  x:Name="OAuthFacebook" Command="{Binding OAuthFacebookCommand}" BackgroundColor="Transparent" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}"/>
+                <Button Text="Twitter" Command="{Binding OAuthTwitterCommand}" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}" />
+                <Button Text="Google" Image="btn_google_signin_light_normal_xxxhdpi.png"  Command="{Binding OAuthGoogleCommand}" IsVisible="{Binding IsLoggingIn, Converter={StaticResource InverseBooleanConverter}}" />
                 <ActivityIndicator Color="Red" IsRunning="true" IsVisible="{Binding IsLoggingIn}"/>
                 <Label Text="Logging you in!" Font="Large" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsLoggingIn}"/>
             </StackLayout>
         </AbsoluteLayout>
     </Frame>
-    <!--</Grid>-->
 </pages:PopupPage>

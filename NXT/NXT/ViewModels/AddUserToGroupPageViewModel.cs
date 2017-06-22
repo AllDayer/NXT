@@ -27,6 +27,20 @@ namespace NXT.ViewModels
         public List<UserDto> Friends { get; set; }
         public List<UserDto> ContactsByEmail { get; set; }
         public List<UserDto> PreviousContacts { get; set; }
+        private bool m_FabVisible = false;
+        public bool FabVisible
+        {
+            get
+            {
+                return m_FabVisible;
+            }
+            set
+            {
+                m_FabVisible = value;
+                RaisePropertyChanged(nameof(FabVisible));
+            }
+        }
+
         private bool m_RunActivity = false;
         public bool RunActivity
         {
@@ -55,13 +69,19 @@ namespace NXT.ViewModels
 
         private async void OnOpenPopupCommand()
         {
+            FabVisible = false;
             var page = new Views.PopupAddUser();
 
             page.CallbackEvent += Page_CallbackEvent;
-
+            page.LeavingPopUpEvent += Page_LeavingPopUpEvent;
             await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PushAsync(page);
             //await Rg.Plugins.Popup.Extensions.NavigationExtension.PushPopupAsync(page);
             //await m_NavigationService.PushPopupPageAsync(page);
+        }
+
+        private void Page_LeavingPopUpEvent(object sender, EventArgs e)
+        {
+            FabVisible = true;
         }
 
         private async void OnOpenContactsCommand()

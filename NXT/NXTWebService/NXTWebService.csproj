@@ -266,6 +266,10 @@
     <Compile Include="Migrations\201706102229179_Initial.Designer.cs">
       <DependentUpon>201706102229179_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706191233291_Google.cs" />
+    <Compile Include="Migrations\201706191233291_Google.Designer.cs">
+      <DependentUpon>201706191233291_Google.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -286,7 +290,9 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
@@ -348,6 +354,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201706102229179_Initial.resx">
       <DependentUpon>201706102229179_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706191233291_Google.resx">
+      <DependentUpon>201706191233291_Google.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

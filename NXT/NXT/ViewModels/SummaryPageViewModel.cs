@@ -65,7 +65,7 @@ namespace NXT.ViewModels
 
         private async void GetUser()
         {
-            User = await CurrentApp.MainViewModel.ServiceApi.GetUserBySocial(Settings.Current.SocialUserID);
+            User = await CurrentApp.MainViewModel.ServiceApi.GetUserBySocial(Settings.Current.SocialUserID, Settings.Current.UserAuth);
         }
 
         //private String TristanUserString = "d9c91004-3994-4bb4-a703-267904985126";
@@ -100,7 +100,7 @@ namespace NXT.ViewModels
             var groups = await CurrentApp.MainViewModel.ServiceApi.GetGroups(Settings.Current.UserGuid.ToString());
             if (groups != null)
             {
-                Settings.Current.Groups = new System.Collections.ObjectModel.ObservableCollection<GroupDto>(groups);
+                Settings.Current.Groups = new System.Collections.ObjectModel.ObservableCollection<GroupDto>(groups.OrderByDescending(x => x.WhoseShout != null && x.WhoseShout.ID == Settings.Current.UserGuid));
                 RaisePropertyChanged(nameof(Groups));
             }
         }
@@ -108,6 +108,14 @@ namespace NXT.ViewModels
         public async void OnRefreshCommand()
         {
             IsBusy = true;
+            if (Settings.Current.User != null && !String.IsNullOrEmpty(Settings.Current.SocialUserID))
+            {
+                User = Settings.Current.User;
+            }
+            else 
+            {
+                GetUser();
+            }
             await RefreshGroups();
             await LoadData();
             IsBusy = false;
@@ -161,19 +169,9 @@ namespace NXT.ViewModels
 
         public void Load(bool refresh)
         {
-            Task.Run(async () => { await LoadData(); });
             if (refresh)//parameters.GetNavigationMode() == NavigationMode.Back || 
             {
-                User = Settings.Current.User;
                 OnRefreshCommand();
-            }
-            else
-            {
-                if (!String.IsNullOrEmpty(Settings.Current.SocialUserID))
-                {
-                    GetUser();
-                    OnRefreshCommand();
-                }
             }
         }
 
@@ -184,6 +182,12 @@ namespace NXT.ViewModels
             if (_authenticationService.IsLoggedIn())
             {
                 Load(parameters["refresh"] != null);
+            }
+            if (parameters["alert"] != null)
+            {
+                Acr.UserDialogs.ToastConfig config = new Acr.UserDialogs.ToastConfig(parameters["alert"].ToString());
+                config.BackgroundColor = System.Drawing.Color.Green;
+                Acr.UserDialogs.UserDialogs.Instance.Toast(config);
             }
         }
     }

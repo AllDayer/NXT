@@ -30,6 +30,10 @@ namespace NXT.Models
 #endif
         public String TwitterID { get; set; } //125192624
 #if WebService
+        [MaxLength(256)]
+#endif
+        public String GoogleID { get; set; } //112698144257139042947
+#if WebService
         [MaxLength(512)]
 #endif
         public String AvatarUrl { get; set; }

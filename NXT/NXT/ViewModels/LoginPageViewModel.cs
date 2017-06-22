@@ -20,7 +20,9 @@ namespace NXT.ViewModels
         IAuthenticationService m_AuthenticationService { get; }
         IPageDialogService _pageDialogService { get; }
         INavigationService m_NavigationService { get; }
-        public DelegateCommand OAuthCommand { get; }
+        public DelegateCommand OAuthFacebookCommand { get; }
+        public DelegateCommand OAuthTwitterCommand { get; }
+        public DelegateCommand OAuthGoogleCommand { get; }
         public SummaryPageViewModel SummaryVM { get; set; }
 
         //private String TristanUserString = "d9c91004-3994-4bb4-a703-267904985126";
@@ -33,22 +35,34 @@ namespace NXT.ViewModels
             m_NavigationService = navigationService;
             Title = "Login";
 
-            var token = FbAccessToken.Current;
-            if (token != null)
+            if (!String.IsNullOrEmpty(Settings.Current.SocialUserID))
             {
-                IsLoggingIn = true;
-                System.Diagnostics.Debug.WriteLine("Token available");
-                AlreadyLoggedIn(token);
+                if (Settings.Current.UserAuth == Models.AuthType.Twitter)
+                {
+                    IsLoggingIn = true;
+                    OnOAuthTwitterCommandExecuted();
+                }
+                else if (Settings.Current.UserAuth == Models.AuthType.Google)
+                {
+                    IsLoggingIn = true;
+                    OnOAuthGoogleCommandExecuted();
+                }
+                else if (Settings.Current.UserAuth == Models.AuthType.Facebook)
+                {
+                    var token = FbAccessToken.Current;
+                    if (token != null)
+                    {
+                        IsLoggingIn = true;
+                        System.Diagnostics.Debug.WriteLine("Token available");
+                        AlreadyLoggedIn(token);
+                    }
+                }
             }
 
-            OAuthCommand = new DelegateCommand(OnOAuthCommandExecuted);
-            //if (!String.IsNullOrEmpty(Settings.Current.SocialUserID))
-            //{
-            //    OnOAuthCommandExecuted();
-            //}
+            OAuthFacebookCommand = new DelegateCommand(OnOAuthFacebookCommandExecuted);
+            OAuthTwitterCommand = new DelegateCommand(OnOAuthTwitterCommandExecuted);
+            OAuthGoogleCommand = new DelegateCommand(OnOAuthGoogleCommandExecuted);
         }
-
-
 
         private bool m_IsLoggingIn;
         public bool IsLoggingIn
@@ -62,7 +76,7 @@ namespace NXT.ViewModels
         private async void AlreadyLoggedIn(FbAccessToken token)
         {
             var res = await m_AuthenticationService.HandleAlreadyLoggedIn(token);
-            if(res)
+            if (res)
             {
                 await AuthenticationSuccess();
 
@@ -75,7 +89,7 @@ namespace NXT.ViewModels
             }
         }
 
-        private async void OnOAuthCommandExecuted()
+        private async void OnOAuthFacebookCommandExecuted()
         {
             IsLoggingIn = true;
             bool res = await m_AuthenticationService.SocialLoginFacebook();
@@ -84,36 +98,41 @@ namespace NXT.ViewModels
                 await AuthenticationSuccess();
 
                 await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
-                await _navigationService.NavigateAsync("/NavigationPage/SummaryPage");
+                await _navigationService.NavigateAsync("/NavigationPage/SummaryPage?refresh=1");
             }
             else
             {
                 IsLoggingIn = false;
             }
-            //IsLoggingIn = true;
-            //Account account = GetFacebookAccount();
-            //if (account == null)
-            //{
-            //    //Get auth token from Facebook
-            //    m_AuthenticationService.RegisterFacebook(this);
-            //    return;
-            //}
-
-            //await AuthenticationSuccess();
-
-            //IsLoggingIn = false;
         }
 
-        //private Account GetFacebookAccount()
-        //{
-        //    IEnumerable<Account> accounts = AccountStore.Create().FindAccountsForService("Facebook");
-        //    if (accounts != null)
-        //    {
-        //        return accounts.FirstOrDefault();
-        //    }
-        //    return null;
-        //}
+        private async void OnOAuthTwitterCommandExecuted()
+        {
+            bool isAutoLogin = await m_AuthenticationService.AutoLoginTwitter(this);
+            if (isAutoLogin)
+            {
+                await AuthenticationSuccess();
 
+                //await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
+                //await _navigationService.NavigateAsync("/NavigationPage/SummaryPage");
+            }
+        }
+
+        private async void OnOAuthGoogleCommandExecuted()
+        {
+            IsLoggingIn = true;
+            bool isAutoLogin = await m_AuthenticationService.AutoLoginGoogle(this);
+            if (isAutoLogin)
+            {
+                await AuthenticationSuccess();
+            }
+            else
+            {
+                NavigationParameters nav = new NavigationParameters();
+                nav.Add("auth", AuthenticationService.Authenticator);
+                await m_NavigationService.NavigateAsync("GoogleAuthPage", nav);
+            }
+        }
         private async Task AuthenticationSuccess()
         {
             //Account account = GetFacebookAccount();
@@ -124,44 +143,119 @@ namespace NXT.ViewModels
             if (groups != null)
             {
                 Settings.Current.Groups = new System.Collections.ObjectModel.ObservableCollection<GroupDto>(groups);
-
-                //await CurrentApp.MainViewModel.RefreshGroupColours();
             }
 
-            //await _navigationService.NavigateAsync("/NavigationPage/SummaryPage");
-            //SummaryVM.Load(false);
-            //await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
-            //await m_NavigationService.PopupGoBackAsync();
-
+            if (Settings.Current.UserAuth != Models.AuthType.Facebook)
+            {//Facebook doesn't like this nav
+                await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAllAsync();
+                await _navigationService.NavigateAsync("/NavigationPage/SummaryPage?refresh=1");
+            }
         }
 
-        public async void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
+        private void AuthenticationFailure()
         {
+            IsLoggingIn = false;
+        }
+
+        public async void OnGoogleAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
+        {
+            IsLoggingIn = true;
             var authenticator = sender as OAuth2Authenticator;
 
             if (authenticator != null)
             {
-                authenticator.Completed -= OnAuthCompleted;
-                authenticator.Error -= OnAuthError;
+                authenticator.Completed -= OnGoogleAuthCompleted;
+                authenticator.Error -= OnGoogleAuthError;
             }
 
             if (e.IsAuthenticated)
             {
-                var accessToken = e.Account.Properties["access_token"].ToString();
-                AccountStore.Create().Save(e.Account, "Facebook");
+                AccountStore.Create().Save(e.Account, AuthenticationService.AccountServiceGoogle);
+                await m_AuthenticationService.FetchGoogleData(e.Account);
                 await AuthenticationSuccess();
             }
-        }
+            else
+            {
+                AuthenticationFailure();
+            }
 
-        public void OnAuthError(object sender, AuthenticatorErrorEventArgs e)
+        }
+        public void OnGoogleAuthError(object sender, AuthenticatorErrorEventArgs e)
         {
             IsLoggingIn = false;
             var authenticator = sender as OAuth2Authenticator;
 
             if (authenticator != null)
             {
-                authenticator.Completed -= OnAuthCompleted;
-                authenticator.Error -= OnAuthError;
+                authenticator.Completed -= OnGoogleAuthCompleted;
+                authenticator.Error -= OnGoogleAuthError;
+            }
+        }
+
+        public async void OnTwitterAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
+        {
+            var authenticator = sender as OAuth1Authenticator;
+
+            if (authenticator != null)
+            {
+                authenticator.Completed -= OnTwitterAuthCompleted;
+                authenticator.Error -= OnTwitterAuthError;
+            }
+
+            if (e.IsAuthenticated)
+            {
+                await AuthenticationSuccess();
+            }
+            else
+            {
+                AuthenticationFailure();
+            }
+        }
+
+
+        public void OnTwitterAuthError(object sender, AuthenticatorErrorEventArgs e)
+        {
+            IsLoggingIn = false;
+            var authenticator = sender as OAuth1Authenticator;
+
+            if (authenticator != null)
+            {
+                authenticator.Completed -= OnTwitterAuthCompleted;
+                authenticator.Error -= OnTwitterAuthError;
+            }
+        }
+
+        public async void OnFacebookAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
+        {
+            IsLoggingIn = true;
+
+            var authenticator = sender as OAuth2Authenticator;
+            if (authenticator != null)
+            {
+                authenticator.Completed -= OnFacebookAuthCompleted;
+                authenticator.Error -= OnFacebookAuthError;
+            }
+
+            if (e.IsAuthenticated)
+            {
+                AccountStore.Create().Save(e.Account, "Facebook");
+                await AuthenticationSuccess();
+            }
+            else
+            {
+                AuthenticationFailure();
+            }
+        }
+
+        public void OnFacebookAuthError(object sender, AuthenticatorErrorEventArgs e)
+        {
+            IsLoggingIn = false;
+            var authenticator = sender as OAuth2Authenticator;
+
+            if (authenticator != null)
+            {
+                authenticator.Completed -= OnFacebookAuthCompleted;
+                authenticator.Error -= OnFacebookAuthError;
             }
         }
 

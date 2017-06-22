@@ -51,6 +51,7 @@ namespace NXTWebService.Migrations
                 UserName = "Elspeth",
                 Email = "elspethelf@hotmail.com",
                 FacebookID = "11111111111111112",
+                GoogleID = "235235235235",
                 AvatarUrl = "http://localhost.com",
                 Groups = new List<Group>(),
                 Records = new List<Record>()

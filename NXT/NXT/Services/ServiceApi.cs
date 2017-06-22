@@ -54,7 +54,7 @@ namespace NXT.Services
             return await client.PatchAsync(requestUri, content);
         }
 
-        private HttpClient NewHttpClient(System.Net.CookieContainer cookies = null)
+        public HttpClient NewHttpClient(System.Net.CookieContainer cookies = null)
         {
             HttpClientHandler handler = new HttpClientHandler()
             {
@@ -82,7 +82,8 @@ namespace NXT.Services
             return client;
         }
 
-        public async Task<UserDto> GetUserBySocial(string socialID, AuthType authType = AuthType.Facebook)
+
+        public async Task<UserDto> GetUserBySocial(string socialID, AuthType authType)
         {
             try
             {
@@ -125,6 +126,11 @@ namespace NXT.Services
                 case AuthType.Facebook:
                     {
                         u.FacebookID = user.SocialID;
+                        break;
+                    }
+                case AuthType.Twitter:
+                    {
+                        u.TwitterID = user.SocialID;
                         break;
                     }
             }

@@ -64,8 +64,14 @@ namespace NXTWebService.Controllers
             {
                 switch (authType)
                 {
+                    case AuthType.Google:
+                        user = db.NXTUsers.FirstOrDefault(x => x.GoogleID == socialId);
+                        break;
                     case AuthType.Facebook:
                         user = db.NXTUsers.FirstOrDefault(x => x.FacebookID == socialId);
+                        break;
+                    case AuthType.Twitter:
+                        user = db.NXTUsers.FirstOrDefault(x => x.TwitterID == socialId);
                         break;
 
                 }
@@ -81,8 +87,8 @@ namespace NXTWebService.Controllers
                 ID = user.ID,
                 Email = user.Email,
                 UserName = user.UserName,
-                AuthType = AuthType.Facebook,
-                SocialID = user.FacebookID,
+                AuthType = authType,
+                SocialID = socialId,
                 AvatarUrl = user.AvatarUrl,
                 Colour = user.Colour
             };

@@ -167,6 +167,7 @@ namespace NXT.ViewModels
 
         public async void OnBuyCommand()
         {
+            this.IsBusy = true;
             m_Record.UserID = UserDto.ID;
             m_Record.GroupID = new Guid(GroupID);
             m_Record.Cost = (float.Parse(Cost));
@@ -178,6 +179,7 @@ namespace NXT.ViewModels
             await CurrentApp.MainViewModel.ServiceApi.NewRecord(m_Record);
             NavigationParameters nav = new NavigationParameters();
             nav.Add("refresh", 1);
+            nav.Add("alert", "Recorded!");
             await m_NavigationService.GoBackAsync(nav);
         }
 
@@ -241,6 +243,12 @@ namespace NXT.ViewModels
             }
 
             RaisePropertyChanged("UserName");
+            if (parameters["alert"] != null)
+            {
+                Acr.UserDialogs.ToastConfig config = new Acr.UserDialogs.ToastConfig(parameters["alert"].ToString());
+                config.BackgroundColor = System.Drawing.Color.Green;
+                Acr.UserDialogs.UserDialogs.Instance.Toast(config);
+            }
         }
     }
 }
